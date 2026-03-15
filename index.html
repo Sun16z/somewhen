@@ -1,0 +1,817 @@
+<!DOCTYPE html>
+
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#FBF7F2">
+<title>Somewhen</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🕯️</text></svg>">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;700;900&family=Noto+Sans+TC:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+--bg:#FBF7F2;--bg2:#FFFFFF;--bg3:#F3EDE5;
+--t1:#2C2418;--t2:#6B5D4F;--t3:#A09484;
+--ac:#C07050;--acs:rgba(192,112,80,.1);--w:#8B6B4A;
+--blue:#5B8FA8;--green:#5A9E6E;--r:18px;--rs:12px;
+--fs:'Noto Serif TC',serif;--fn:'Noto Sans TC',sans-serif;
+--sh:0 2px 12px rgba(44,36,24,.06)
+}
+html,body{height:100%;background:var(--bg);color:var(--t1);font-family:var(--fn);-webkit-font-smoothing:antialiased;overflow-x:hidden}
+#R{max-width:480px;margin:0 auto;min-height:100vh;position:relative}
+.S{position:relative;padding:24px 20px 110px;animation:fu .35s ease-out}
+@keyframes fu{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+/* nav */
+.nb{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:480px;background:rgba(251,247,242,.97);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-top:1px solid rgba(139,107,74,.1);display:flex;justify-content:space-around;padding:8px 0 max(8px,env(safe-area-inset-bottom));z-index:100}
+.nb button{background:none;border:none;color:var(--t3);font-size:10px;font-family:var(--fn);cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:2px;padding:4px 10px;-webkit-tap-highlight-color:transparent;transition:color .2s}
+.nb button.a{color:var(--ac)}
+.nb .ni{font-size:20px}
+/* header */
+.hd{text-align:center;padding:36px 0 20px}
+.hd h1{font-family:var(--fs);font-weight:900;font-size:28px;letter-spacing:2px;color:var(--w)}
+.hd p{color:var(--t2);font-size:13px;margin-top:6px;line-height:1.8;font-family:var(--fs)}
+/* cards */
+.cd{background:var(--bg2);border:1px solid rgba(139,107,74,.08);border-radius:var(--r);padding:16px 14px;cursor:pointer;transition:all .2s;position:relative;-webkit-tap-highlight-color:transparent;box-shadow:var(--sh)}
+.cd:active{transform:scale(.97);box-shadow:none}
+.tg{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:8px}
+.cd .ic{font-size:24px;display:block;margin-bottom:6px}
+.cd .lb{font-family:var(--fs);font-weight:700;font-size:14px;margin-bottom:3px;color:var(--w)}
+.cd .ds{font-size:11px;color:var(--t3);line-height:1.4}
+.cb{position:absolute;top:10px;right:10px;background:var(--ac);color:#fff;font-size:10px;font-weight:700;padding:2px 7px;border-radius:20px}
+/* stats */
+.sr{display:flex;gap:8px;margin:16px 0}
+.sc{flex:1;background:var(--bg2);border:1px solid rgba(139,107,74,.06);border-radius:var(--rs);padding:14px 8px;text-align:center;box-shadow:var(--sh)}
+.sn{font-family:var(--fs);font-weight:900;font-size:24px;color:var(--ac)}
+.sl{font-size:10px;color:var(--t3);margin-top:2px}
+.st{font-family:var(--fs);font-weight:700;font-size:20px;margin-bottom:14px;color:var(--w)}
+/* toast */
+.toast{position:fixed;top:28px;left:50%;transform:translateX(-50%);background:var(--bg2);border:1px solid var(--ac);color:var(--ac);padding:10px 20px;border-radius:30px;font-size:13px;font-weight:500;z-index:200;box-shadow:0 4px 20px rgba(0,0,0,.1);animation:ti .3s ease-out;white-space:nowrap}
+@keyframes ti{from{opacity:0;transform:translate(-50%,-10px)}to{opacity:1;transform:translate(-50%,0)}}
+/* form */
+.rh{display:flex;align-items:center;gap:12px;margin-bottom:20px}
+.bb{background:var(--bg2);border:1px solid rgba(139,107,74,.1);color:var(--t1);width:38px;height:38px;border-radius:10px;cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center;-webkit-tap-highlight-color:transparent;flex-shrink:0;box-shadow:var(--sh)}
+.rt{font-family:var(--fs);font-weight:700;font-size:18px;color:var(--w)}
+.fg{margin-bottom:16px}
+.fl{display:block;font-size:12px;color:var(--t2);margin-bottom:6px;font-weight:500}
+.fi,.ft{width:100%;background:var(--bg2);border:1px solid rgba(139,107,74,.12);border-radius:var(--rs);color:var(--t1);font-family:var(--fn);font-size:16px;padding:12px 14px;outline:none;-webkit-appearance:none;box-shadow:var(--sh)}
+.fi:focus,.ft:focus{border-color:var(--ac);box-shadow:0 0 0 3px rgba(192,112,80,.1)}
+.ft{min-height:140px;resize:vertical;line-height:1.7}
+/* chips */
+.cr{display:flex;flex-wrap:wrap;gap:6px}
+.ch{background:var(--bg2);border:1px solid rgba(139,107,74,.1);border-radius:20px;padding:7px 14px;font-size:12px;color:var(--t2);cursor:pointer;-webkit-tap-highlight-color:transparent;font-family:var(--fn);box-shadow:var(--sh)}
+.ch.s{background:var(--acs);border-color:var(--ac);color:var(--ac);font-weight:500}
+/* trigger chips */
+.trg{display:flex;flex-wrap:wrap;gap:8px}
+.tc{padding:8px 14px;font-size:13px;background:var(--bg2);border:1px solid rgba(139,107,74,.1);border-radius:20px;color:var(--t2);cursor:pointer;transition:all .2s;-webkit-tap-highlight-color:transparent;line-height:1.4;font-family:var(--fn);box-shadow:var(--sh)}
+.tc.s{background:var(--acs);border-color:var(--ac);color:var(--ac);font-weight:500;box-shadow:0 0 0 3px rgba(192,112,80,.08)}
+.tc:active{transform:scale(.96)}
+/* topic chips */
+.ts{display:flex;flex-wrap:wrap;gap:6px}
+.tp{background:var(--bg2);border:1px solid rgba(139,107,74,.1);border-radius:10px;padding:8px 12px;font-size:12px;color:var(--t2);cursor:pointer;-webkit-tap-highlight-color:transparent;font-family:var(--fn);box-shadow:var(--sh)}
+.tp.s{background:var(--acs);border-color:var(--ac);color:var(--ac)}
+/* submit */
+.sb{width:100%;padding:15px;background:linear-gradient(135deg,var(--ac),#A05A3A);color:#FFF;font-family:var(--fs);font-weight:700;font-size:15px;border:none;border-radius:var(--r);cursor:pointer;margin-top:8px;box-shadow:0 4px 16px rgba(192,112,80,.2);-webkit-tap-highlight-color:transparent;letter-spacing:.5px}
+.sb:disabled{opacity:.35;cursor:not-allowed}
+/* mode toggle */
+.mt{display:flex;margin-bottom:16px;border-radius:var(--rs);overflow:hidden;border:1px solid rgba(139,107,74,.1);box-shadow:var(--sh)}
+.mb{flex:1;padding:11px 4px;background:var(--bg2);border:none;color:var(--t3);font-family:var(--fn);font-size:13px;font-weight:500;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.mb.a{background:var(--acs);color:var(--ac);font-weight:600}
+.mb.l{opacity:.4;cursor:not-allowed}
+.mb:not(:last-child){border-right:1px solid rgba(139,107,74,.08)}
+/* recorder */
+.vp{background:var(--bg2);border:2px dashed rgba(139,107,74,.15);border-radius:var(--r);padding:36px 20px;text-align:center;color:var(--t3);cursor:pointer;-webkit-tap-highlight-color:transparent;margin-bottom:16px;box-shadow:var(--sh)}
+.vr{border-radius:var(--r);overflow:hidden;background:#000;margin-bottom:16px;box-shadow:var(--sh)}
+.vl{width:100%;aspect-ratio:16/9;object-fit:cover;display:block;background:#000}
+.vl.rc{box-shadow:inset 0 0 0 3px var(--ac)}
+.vc{display:flex;align-items:center;justify-content:center;gap:12px;padding:12px;background:var(--bg2);flex-wrap:wrap}
+.rb{display:flex;align-items:center;gap:6px;padding:10px 22px;background:var(--ac);color:#fff;border:none;border-radius:30px;font-family:var(--fn);font-size:14px;font-weight:600;cursor:pointer;box-shadow:0 4px 12px rgba(192,112,80,.25)}
+.rd{width:8px;height:8px;border-radius:50%;background:#fff}
+.rx{padding:9px 16px;background:transparent;border:1px solid rgba(139,107,74,.15);color:var(--t2);border-radius:30px;font-family:var(--fn);font-size:12px;cursor:pointer}
+.rs2{padding:10px 22px;background:rgba(192,112,80,.08);border:1px solid rgba(192,112,80,.2);color:var(--ac);border-radius:30px;font-family:var(--fn);font-size:14px;font-weight:600;cursor:pointer}
+.rtm{display:flex;align-items:center;gap:6px;color:var(--ac);font-size:16px;font-weight:700}
+.rdp{width:8px;height:8px;border-radius:50%;background:var(--ac);animation:pl 1.5s ease-in-out infinite}
+@keyframes pl{0%,100%{opacity:1}50%{opacity:.3}}
+.ar{text-align:center;padding:32px;font-size:40px;background:var(--bg3);border-radius:var(--r)}
+.arec{text-align:center;padding:28px;background:var(--bg3);border-radius:var(--r) var(--r) 0 0}
+.aw{width:60px;height:60px;border-radius:50%;background:rgba(192,112,80,.1);margin:0 auto 12px;animation:ap 2s ease-in-out infinite}
+@keyframes ap{0%,100%{transform:scale(1);opacity:.5}50%{transform:scale(1.25);opacity:.9}}
+.rtl{font-size:28px;font-weight:700;color:var(--ac)}
+/* guided */
+.gt{display:flex;align-items:center;gap:12px;padding:14px 16px;background:var(--bg2);border:1px solid rgba(139,107,74,.08);border-radius:var(--rs);margin-bottom:16px;cursor:pointer;box-shadow:var(--sh)}
+.gs{width:44px;height:24px;border-radius:12px;background:rgba(139,107,74,.15);position:relative;transition:background .2s;flex-shrink:0}
+.gs.on{background:var(--ac)}
+.gd{width:18px;height:18px;border-radius:50%;background:white;position:absolute;top:3px;left:3px;transition:transform .2s;box-shadow:0 1px 3px rgba(0,0,0,.15)}
+.gs.on .gd{transform:translateX(20px)}
+.gsc{background:var(--bg2);border:1px solid rgba(192,112,80,.12);border-radius:var(--r);padding:22px 18px;margin-bottom:16px;box-shadow:var(--sh)}
+.gpr{height:3px;background:rgba(139,107,74,.08);border-radius:2px;margin-bottom:12px;overflow:hidden}
+.gpb{height:100%;background:var(--ac);border-radius:2px;transition:width .3s}
+.gph{font-size:11px;color:var(--ac);font-weight:600;margin-bottom:8px;letter-spacing:1px}
+.gq{font-family:var(--fs);font-size:17px;font-weight:700;line-height:1.7;margin-bottom:16px;color:var(--w)}
+/* library */
+.lf{display:flex;gap:6px;overflow-x:auto;padding-bottom:6px;margin-bottom:12px;-webkit-overflow-scrolling:touch}
+.lf::-webkit-scrollbar{display:none}
+.fc{white-space:nowrap;background:var(--bg2);border:1px solid rgba(139,107,74,.08);border-radius:20px;padding:6px 12px;font-size:11px;color:var(--t3);cursor:pointer;flex-shrink:0;font-family:var(--fn);box-shadow:var(--sh)}
+.fc.a{background:var(--acs);border-color:var(--ac);color:var(--ac)}
+.mc{background:var(--bg2);border:1px solid rgba(139,107,74,.06);border-radius:var(--r);padding:16px;margin-bottom:10px;cursor:pointer;box-shadow:var(--sh)}
+.mc:active{box-shadow:none;transform:scale(.99)}
+.mct{display:flex;justify-content:space-between;margin-bottom:8px}
+.mtp{font-size:12px;color:var(--ac);font-weight:500}
+.md{font-size:10px;color:var(--t3)}
+.mtl{font-family:var(--fs);font-weight:700;font-size:15px;margin-bottom:4px;line-height:1.4;color:var(--w)}
+.mpv{font-size:12px;color:var(--t2);line-height:1.5;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.mf{display:flex;gap:6px;margin-top:8px;flex-wrap:wrap}
+.mg{font-size:10px;background:var(--bg3);color:var(--t3);padding:2px 8px;border-radius:10px}
+/* player */
+.pc{background:var(--bg2);border:1px solid rgba(139,107,74,.06);border-radius:var(--r);padding:24px 18px;margin-top:12px;box-shadow:var(--sh)}
+.ptc{font-size:13px;color:var(--ac);font-weight:500;margin-bottom:10px}
+.ptl{font-family:var(--fs);font-weight:900;font-size:22px;line-height:1.5;margin-bottom:6px;color:var(--w)}
+.pm{font-size:11px;color:var(--t3);margin-bottom:20px}
+.pb{font-size:16px;line-height:2;color:var(--t2);white-space:pre-wrap;font-family:var(--fs)}
+.pr{display:flex;gap:6px;margin-top:20px;flex-wrap:wrap}
+.pt{font-size:11px;background:var(--acs);color:var(--ac);padding:3px 10px;border-radius:10px}
+.db{width:100%;padding:12px;background:transparent;border:1px solid rgba(200,90,90,.2);color:#B05050;font-family:var(--fn);font-size:13px;border-radius:var(--rs);cursor:pointer;margin-top:16px}
+.shb{width:100%;padding:12px;background:var(--acs);border:1px solid rgba(192,112,80,.2);color:var(--ac);font-family:var(--fn);font-size:13px;font-weight:500;border-radius:var(--rs);cursor:pointer;margin-top:16px}
+/* vault items */
+.vi{background:var(--bg2);border:1px solid rgba(139,107,74,.08);border-radius:var(--rs);padding:14px;margin-bottom:10px;box-shadow:var(--sh)}
+.vi-h{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}
+.vi-t{font-family:var(--fs);font-weight:700;font-size:14px;color:var(--w)}
+.vi-c{font-size:11px;color:var(--t3);background:var(--bg3);padding:2px 8px;border-radius:8px}
+.vi-b{font-size:13px;color:var(--t2);line-height:1.6}
+.vi-d{display:flex;gap:8px;margin-top:8px}
+.vi-db{font-size:11px;color:var(--ac);cursor:pointer;padding:4px 10px;border:1px solid rgba(192,112,80,.15);border-radius:8px;background:transparent}
+/* contact matrix */
+.cm{background:var(--bg2);border:1px solid rgba(139,107,74,.08);border-radius:var(--rs);padding:14px;margin-bottom:10px;box-shadow:var(--sh);display:flex;align-items:flex-start;gap:12px}
+.cm-i{font-size:24px;flex-shrink:0;margin-top:2px}
+.cm-q{font-size:13px;color:var(--t2);margin-bottom:4px;line-height:1.5}
+.cm-a{font-family:var(--fs);font-weight:700;font-size:14px;color:var(--w)}
+.cm-p{font-size:12px;color:var(--t3);margin-top:2px}
+/* capsule */
+.cap{background:var(--bg2);border:1px solid rgba(139,107,74,.08);border-radius:var(--rs);padding:16px;margin-bottom:10px;box-shadow:var(--sh)}
+.cap-h{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+.cap-t{font-family:var(--fs);font-weight:700;font-size:14px;color:var(--w)}
+.cap-d{font-size:11px;color:var(--ac);background:var(--acs);padding:2px 10px;border-radius:10px;font-weight:500}
+.cap-b{font-size:13px;color:var(--t2);line-height:1.5}
+.cap-r{font-size:11px;color:var(--t3);margin-top:6px}
+/* switch */
+.dms{background:var(--bg2);border:1px solid rgba(139,107,74,.08);border-radius:var(--r);padding:20px;margin-bottom:16px;box-shadow:var(--sh)}
+.dms-h{font-family:var(--fs);font-weight:700;font-size:16px;color:var(--w);margin-bottom:8px}
+.dms-p{font-size:13px;color:var(--t2);line-height:1.6;margin-bottom:12px}
+.dms-s{display:flex;justify-content:space-between;align-items:center;padding:12px;background:var(--bg3);border-radius:var(--rs);margin-bottom:8px}
+.dms-sl{font-size:13px;color:var(--t2)}
+.dms-sv{font-size:13px;font-weight:600;color:var(--ac)}
+/* empty */
+.es{text-align:center;padding:48px 20px;color:var(--t3)}
+/* auth */
+.as{position:relative;min-height:100vh;display:flex;flex-direction:column;justify-content:center;padding:40px 28px;animation:fu .5s ease-out;background:var(--bg)}
+.al{text-align:center;margin-bottom:40px}
+.atl{font-family:var(--fs);font-size:20px;font-weight:700;color:var(--w);text-align:center;margin-bottom:8px;line-height:1.6}
+.asu{color:var(--t3);font-size:14px;text-align:center;margin-bottom:32px;line-height:1.7;font-family:var(--fs)}
+.asb{display:flex;flex-direction:column;gap:12px;margin-bottom:24px}
+.ab{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;padding:14px 20px;border-radius:12px;font-family:var(--fn);font-size:15px;font-weight:600;cursor:pointer;-webkit-tap-highlight-color:transparent;border:1px solid rgba(139,107,74,.12);box-shadow:var(--sh)}
+.ab:active{transform:scale(.98)}
+.ab.ap{background:var(--t1);color:#fff;border:none}
+.ab.ag{background:var(--bg2);color:var(--t1)}
+.adv{display:flex;align-items:center;gap:16px;margin-bottom:20px}
+.adl{flex:1;height:1px;background:rgba(139,107,74,.12)}
+.adt{color:var(--t3);font-size:12px}
+.ain{width:100%;background:var(--bg2);border:1px solid rgba(139,107,74,.12);border-radius:12px;color:var(--t1);font-family:var(--fn);font-size:16px;padding:14px 16px;outline:none;-webkit-appearance:none;box-shadow:var(--sh)}
+.ain:focus{border-color:var(--ac)}
+.ain::placeholder{color:var(--t3)}
+.aer{background:rgba(176,80,80,.08);border:1px solid rgba(176,80,80,.15);border-radius:10px;padding:10px 14px;font-size:13px;color:#B05050;text-align:center;margin-bottom:16px}
+.aft{text-align:center;margin-top:24px;font-size:13px;color:var(--t3)}
+.alk{color:var(--ac);cursor:pointer;font-weight:500}
+.atm{text-align:center;margin-top:28px;font-size:11px;color:var(--t3);line-height:1.6}
+.atm a{color:var(--t2)}
+.odd{display:flex;justify-content:center;gap:8px;margin-top:28px}
+.od{width:8px;height:8px;border-radius:50%;background:rgba(139,107,74,.15);transition:all .3s;cursor:pointer}
+.od.a{background:var(--ac);width:24px;border-radius:4px}
+/* pricing */
+.pcd{background:var(--bg2);border:1px solid rgba(139,107,74,.08);border-radius:var(--r);padding:20px;margin-bottom:12px;box-shadow:var(--sh)}
+.pcd.hl{border-color:var(--ac);box-shadow:0 0 20px rgba(192,112,80,.08)}
+.pcd.cu{border-color:var(--green)}
+.pn{font-family:var(--fs);font-weight:700;font-size:18px;color:var(--w)}
+.pp{font-size:16px;font-weight:700;color:var(--ac)}
+.pf{list-style:none;margin-bottom:16px}
+.pf li{font-size:13px;color:var(--t2);padding:4px 0}
+.pcta{width:100%;padding:12px;background:var(--ac);color:#fff;border:none;border-radius:var(--rs);font-family:var(--fn);font-size:14px;font-weight:600;cursor:pointer}
+.pcta.cu{background:rgba(90,158,110,.1);color:var(--green);cursor:default}
+/* profile */
+.psec{background:var(--bg2);border:1px solid rgba(139,107,74,.06);border-radius:var(--r);padding:24px;margin-bottom:16px;box-shadow:var(--sh)}
+.pav{width:64px;height:64px;border-radius:50%;background:var(--bg3);display:flex;align-items:center;justify-content:center;font-size:28px;margin:0 auto 12px;border:2px solid var(--ac)}
+.pnm{font-family:var(--fs);font-weight:700;font-size:20px;text-align:center;color:var(--w);margin-bottom:4px}
+.pem{font-size:13px;color:var(--t3);text-align:center;margin-bottom:16px}
+.pmi{display:flex;align-items:center;justify-content:space-between;padding:14px 0;border-bottom:1px solid rgba(139,107,74,.06);cursor:pointer}
+.pmi:last-child{border-bottom:none}
+.lob{width:100%;padding:14px;background:transparent;border:1px solid rgba(176,80,80,.2);color:#B05050;font-family:var(--fn);font-size:14px;border-radius:var(--rs);cursor:pointer}
+.tbg{display:inline-block;margin-top:10px;padding:4px 14px;border-radius:20px;font-size:11px;font-weight:700;border:1px solid;letter-spacing:1px}
+/* section tabs */
+.stb{display:flex;gap:0;border-radius:var(--rs);overflow:hidden;border:1px solid rgba(139,107,74,.1);margin-bottom:16px;box-shadow:var(--sh)}
+.stb button{flex:1;padding:10px;background:var(--bg2);border:none;color:var(--t3);font-family:var(--fn);font-size:12px;font-weight:500;cursor:pointer}
+.stb button.a{background:var(--acs);color:var(--ac);font-weight:600}
+.stb button:not(:last-child){border-right:1px solid rgba(139,107,74,.08)}
+</style>
+</head>
+<body>
+<div id="R"></div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+<script>
+"use strict";
+var h=React.createElement,F=React.Fragment,us=React.useState,ue=React.useEffect,ur=React.useRef,uc=React.useCallback;
+var SK="tv5";
+function ld(){try{return JSON.parse(localStorage.getItem(SK))||{msgs:[],vault:[],contacts:[],capsules:[],dms:{enabled:false,interval:90,witnesses:[]},family:[],dates:[],monthlyCount:0}}catch(e){return{msgs:[],vault:[],contacts:[],capsules:[],dms:{enabled:false,interval:90,witnesses:[]},family:[],dates:[],monthlyCount:0}}}
+function sv(d){try{localStorage.setItem(SK,JSON.stringify(d))}catch(e){}}
+
+// ── Family helpers ──
+var REL_OPTIONS=[{id:“son”,label:“兒子”,icon:“👦”},{id:“daughter”,label:“女兒”,icon:“👧”},{id:“wife”,label:“老婆”,icon:“👩”},{id:“husband”,label:“老公”,icon:“👨”},{id:“mother”,label:“媽媽”,icon:“👵”},{id:“father”,label:“爸爸”,icon:“👴”},{id:“sibling”,label:“兄弟姐妹”,icon:“👫”},{id:“friend”,label:“摯友”,icon:“🤝”},{id:“self”,label:“未來的自己”,icon:“🪞”},{id:“other”,label:“其他”,icon:“👤”}];
+function getFamilyRecips(data){
+if(!data.family||!data.family.length)return[“全家人”,“未來的自己”];
+return data.family.map(function(f){return f.nickname||f.name}).concat([“全家人”])
+}
+
+// ── Holiday & milestone calendar ──
+var FIXED_HOLIDAYS=[
+{m:1,d:1,name:“元旦”,icon:“🎊”,prompt:“新的一年，你最想對家人說什麼？”},
+{m:2,d:14,name:“情人節”,icon:“💕”,prompt:“跟另一半說一段只有你們才懂的話”},
+{m:4,d:4,name:“兒童節”,icon:“🧒”,prompt:“你最想讓孩子永遠記得的一件事是什麼？”},
+{m:5,d:1,name:“母親節（前夕）”,icon:“🌸”,prompt:“給媽媽或老婆錄一段感謝的話”},
+{m:6,d:1,name:“父親節（前夕）”,icon:“👔”,prompt:“身為爸爸，你最驕傲的一件事是什麼？”},
+{m:9,d:28,name:“教師節”,icon:“📚”,prompt:“你人生中最感謝的老師或導師是誰？”},
+{m:12,d:24,name:“平安夜”,icon:“🎄”,prompt:“今年最想感謝的一件事是什麼？”},
+{m:12,d:31,name:“跨年夜”,icon:“🥂”,prompt:“給明年的自己寫一封信”}
+];
+
+function getUpcomingEvents(data){
+var now=new Date();var y=now.getFullYear();var m=now.getMonth()+1;var d=now.getDate();
+var events=[];
+// Fixed holidays - find next 3 upcoming
+FIXED_HOLIDAYS.forEach(function(h){
+var daysAway;
+var hDate=new Date(y,h.m-1,h.d);
+if(hDate<now)hDate=new Date(y+1,h.m-1,h.d);
+daysAway=Math.ceil((hDate-now)/(1000*60*60*24));
+if(daysAway<=60)events.push({type:“holiday”,name:h.name,icon:h.icon,prompt:h.prompt,date:hDate.toISOString().slice(0,10),daysAway:daysAway})
+});
+// Family birthdays
+if(data.family)data.family.forEach(function(f){
+if(!f.birthday)return;
+var parts=f.birthday.split(”-”);var bm=parseInt(parts[1]);var bd=parseInt(parts[2]);
+var bDate=new Date(y,bm-1,bd);
+if(bDate<now)bDate=new Date(y+1,bm-1,bd);
+var daysAway=Math.ceil((bDate-now)/(1000*60*60*24));
+var age=bDate.getFullYear()-parseInt(parts[0]);
+if(daysAway<=60)events.push({type:“birthday”,name:(f.nickname||f.name)+” “+age+” 歲生日”,icon:“🎂”,prompt:“錄一段生日祝福給”+(f.nickname||f.name)+”！”,date:bDate.toISOString().slice(0,10),daysAway:daysAway,person:f.nickname||f.name})
+});
+// Custom dates
+if(data.dates)data.dates.forEach(function(dt){
+var parts=dt.date.split(”-”);var dm=parseInt(parts[1]);var dd=parseInt(parts[2]);
+var dDate=new Date(y,dm-1,dd);
+if(dDate<now)dDate=new Date(y+1,dm-1,dd);
+var daysAway=Math.ceil((dDate-now)/(1000*60*60*24));
+if(daysAway<=60)events.push({type:“custom”,name:dt.name,icon:dt.icon||“📅”,prompt:dt.prompt||“為這個特別的日子錄一段話”,date:dDate.toISOString().slice(0,10),daysAway:daysAway})
+});
+events.sort(function(a,b){return a.daysAway-b.daysAway});
+return events.slice(0,5)
+}
+
+// Monthly challenge
+function getMonthlyChallenge(data){
+var now=new Date();var month=now.getFullYear()*12+now.getMonth();
+var msgsThisMonth=data.msgs.filter(function(m){var d=new Date(m.createdAt);return d.getFullYear()*12+d.getMonth()===month}).length;
+return{month:now.getMonth()+1,count:msgsThisMonth,goal:1,done:msgsThisMonth>=1}
+}
+
+// .ics generator
+function genICS(title,date,desc){
+var d=date.replace(/-/g,””);
+return”BEGIN:VCALENDAR\nVERSION:2.0\nBEGIN:VEVENT\nDTSTART;VALUE=DATE:”+d+”\nSUMMARY:🕯️ “+title+”\nDESCRIPTION:”+desc.replace(/\n/g,”\n”)+”\nEND:VEVENT\nEND:VCALENDAR”
+}
+function downloadICS(title,date,desc){
+var blob=new Blob([genICS(title,date,desc)],{type:“text/calendar”});
+var url=URL.createObjectURL(blob);var a=document.createElement(“a”);
+a.href=url;a.download=“somewhen-”+date+”.ics”;
+document.body.appendChild(a);a.click();document.body.removeChild(a);URL.revokeObjectURL(url)
+}
+
+// Weekly questions - rotates based on week number
+var WEEKLY_QS=[“你人生中最後悔沒做的一件事是什麼？”,“如果明天就是最後一天，你最想跟誰說什麼？”,“你這輩子收過最好的禮物是什麼？為什麼？”,“你最想讓孩子知道的一個家族故事是？”,“你人生中最勇敢的一個決定是什麼？”,“你最感謝的一個陌生人做了什麼事？”,“如果可以寫一封信給十年後的自己，你會說什麼？”,“你跟另一半之間最美好的一個回憶是？”,“你這輩子哭得最慘的一次是為了什麼？”,“你最希望自己在 20 歲就懂的道理是？”,“有沒有一首歌會讓你想起某個特別的人？”,“你做過最瘋狂的一件事是什麼？”,“如果你的孩子問你『人生的意義是什麼』，你會怎麼回答？”,“你人生中最意外的一次轉折是什麼？”,“你最想帶家人去的一個地方是哪裡？為什麼？”];
+function getWeeklyQ(){var w=Math.floor(Date.now()/(7*24*60*60*1000));return WEEKLY_QS[w%WEEKLY_QS.length]}
+
+// Checklist calculator
+function calcChecklist(data){
+var items=[
+{id:“msg”,label:“錄了第一段留言給家人”,icon:“✍️”,done:data.msgs.length>0},
+{id:“vault”,label:“記錄了資產放在哪裡”,icon:“🔐”,done:data.vault.length>0},
+{id:“contact”,label:“指定了緊急聯絡人”,icon:“👥”,done:data.contacts.length>0},
+{id:“capsule”,label:“設了第一個時光膠囊”,icon:“⏰”,done:data.capsules.length>0},
+{id:“dms”,label:“開啟了安全開關”,icon:“💀”,done:data.dms.enabled}
+];
+var done=items.filter(function(i){return i.done}).length;
+return{items:items,done:done,total:items.length,pct:Math.round(done/items.length*100)}
+}
+
+// Export / Import
+function doExport(data){
+var json=JSON.stringify(data,null,2);
+var blob=new Blob([json],{type:“application/json”});
+var url=URL.createObjectURL(blob);
+var a=document.createElement(“a”);
+a.href=url;a.download=“somewhen-backup-”+new Date().toISOString().slice(0,10)+”.json”;
+document.body.appendChild(a);a.click();document.body.removeChild(a);URL.revokeObjectURL(url);
+}
+function doImport(file,cb){
+var reader=new FileReader();
+reader.onload=function(e){
+try{var d=JSON.parse(e.target.result);if(d.msgs){cb(d)}}catch(err){alert(“檔案格式錯誤”)}
+};reader.readAsText(file);
+}
+
+var TOPICS=[
+{id:“money”,icon:“💰”,label:“金錢與財務”,desc:“理財、投資、賺錢、花錢的智慧”},
+{id:“love”,icon:“❤️”,label:“感情與愛”,desc:“戀愛、婚姻、心碎、放手”},
+{id:“career”,icon:“🎯”,label:“事業與選擇”,desc:“職涯、創業、取捨、方向”},
+{id:“betrayal”,icon:“🌪️”,label:“背叛與信任”,desc:“被騙、被背叛、重建信任”},
+{id:“loss”,icon:“🕊️”,label:“失去與告別”,desc:“離別、死亡、遺憾、放下”},
+{id:“family”,icon:“🏠”,label:“家庭與親情”,desc:“家人相處、衝突、和解”},
+{id:“growth”,icon:“🌱”,label:“成長與挫折”,desc:“失敗、低潮、重新站起來”},
+{id:“joy”,icon:“☀️”,label:“快樂與感恩”,desc:“開心的事、想說謝謝的話”},
+{id:“secret”,icon:“🤫”,label:“只有我們知道”,desc:“私密的話、家族笑話、內部梗”},
+{id:“advice”,icon:“🧭”,label:“人生建議”,desc:“如果能重來，我會這樣做”}
+];
+var RECIP=[“大寶”,“小寶”,“老婆”,“全家人”,“未來的自己”];
+var TIERS={free:{l:“免費版”,b:“FREE”,m:[“text”],c:”#A09484”},lite:{l:“輕量版”,b:“LITE”,m:[“text”,“audio”],c:”#5B8FA8”,p:”$4.99/月”},pro:{l:“高級版”,b:“PRO”,m:[“text”,“audio”,“video”],c:”#C07050”,p:”$9.99/月”}};
+
+var TRG={money:{exp:[“第一次自己賺錢”,“投資賠了大錢”,“借錢給朋友”,“買房的壓力”,“被騙走一筆錢”,“因為錢跟家人吵架”],emo:[“後悔沒早點學理財”,“對錢的焦慮感”,“窮怕了的心態”],adv:[“量入為出比賺多少重要”,“永遠要有緊急預備金”,“投資之前先投資自己”]},love:{exp:[“初戀的心動”,“被劈腿”,“結婚那天的心情”,“跟另一半最嚴重的冷戰”,“為了愛做過最瘋的事”],emo:[“害怕被拋棄”,“愛到不像自己”,“放手的解脫感”],adv:[“不要為了不孤單而將就”,“真正的愛是選擇不是感覺”,“婚姻需要刻意經營”]},career:{exp:[“第一次被老闆罵”,“辭掉穩定工作”,“創業失敗”,“遇到人生貴人”,“加班到懷疑人生”],emo:[“不知道自己要什麼”,“怕做錯選擇”,“成功後的空虛感”],adv:[“選對產業比選對公司重要”,“該走的時候要果斷”,“能力比學歷重要”]},betrayal:{exp:[“被最好的朋友出賣”,“發現對方說謊”,“職場被同事陷害”,“被利用完就丟掉”],emo:[“不敢再相信任何人”,“心寒但裝沒事”,“原諒了但忘不了”],adv:[“看一個人要看他對沒用的人的態度”,“原諒是為了自己”,“吃一塹長一智”]},loss:{exp:[“失去親人”,“寵物過世”,“友情破裂”,“遺憾沒有好好道別”,“夢想破滅”],emo:[“覺得世界都空了”,“突然在某個瞬間崩潰”,“失去之後更珍惜擁有的”],adv:[“悲傷沒有標準時間表”,“允許自己不堅強”,“想哭就哭出來”]},family:{exp:[“跟爸媽吵到不講話”,“第一次當父母的慌張”,“家人生重病”,“過年團圓的感動”],emo:[“覺得虧欠家人”,“終於理解父母的那一刻”,“家人是最親也最傷的人”],adv:[“不要把最差的情緒留給最親的人”,“陪伴比禮物重要”,“你老媽其實比你想像的堅強”]},growth:{exp:[“考試落榜”,“經歷過至暗時刻”,“第一次獨立生活”,“跌到谷底又爬起來”],emo:[“覺得自己不夠好”,“害怕失敗所以不敢開始”,“回頭看覺得一切值得”],adv:[“失敗是必要的學費”,“舒適圈待久了會退化”,“你比你以為的更堅強”]},joy:{exp:[“孩子第一次叫爸爸”,“旅行中的美好瞬間”,“跟朋友笑到肚子痛”,“小時候最快樂的記憶”],emo:[“感恩遇到好的人”,“簡單的事最開心”,“突然覺得活著真好”],adv:[“快樂不需要等到成功”,“學會感恩日子會變好”,“每天記一件開心的事”]},secret:{exp:[“不敢跟任何人說的糗事”,“偷偷做過的好事”,“年輕時的荒唐事”,“藏了什麼東西在某個地方”],emo:[“想說但不知道怎麼開口”,“覺得好笑又心虛”],adv:[“你老媽她其實很愛你只是不會表達”,“家裡的笑話要一代傳一代”,“別太認真，人生要有幽默感”]},advice:{exp:[“如果能重來會做不同選擇的事”,“人生最正確的一個決定”,“後悔沒有早點做的事”],emo:[“希望孩子少走彎路”,“想留下一些什麼”,“遺憾但接受了”],adv:[“健康比什麼都重要”,“時間才是最貴的東西”,“找到你熱愛的事然後堅持下去”]}};
+
+var VAULT_CATS=[{id:“crypto”,icon:“🔐”,label:“加密貨幣”,ph:“例：Binance 帳戶、Metamask、Ledger 冷錢包”},{id:“bank”,icon:“🏦”,label:“銀行帳戶”,ph:“例：中信銀行、國泰世華”},{id:“insurance”,icon:“🛡️”,label:“保險”,ph:“例：保單號碼、保險公司”},{id:“property”,icon:“🏠”,label:“房產”,ph:“例：房契位置、登記資訊”},{id:“docs”,icon:“📄”,label:“重要文件”,ph:“例：遺囑、護照、印鑑”},{id:“other”,icon:“📦”,label:“其他”,ph:“其他重要資產線索”}];
+var CONTACT_QS=[{icon:“⚖️”,q:“遇到法律問題找誰？”,ph:“律師姓名、電話”},{icon:“💰”,q:“加密貨幣如何變現？”,ph:“懂技術的朋友、託管商”},{icon:“🛡️”,q:“保險理賠找誰？”,ph:“保險業務員姓名、電話”},{icon:“🏦”,q:“銀行帳戶問題找誰？”,ph:“銀行理專、家人”},{icon:“📋”,q:“遺囑 / 繼承事務找誰？”,ph:“律師、代書”},{icon:“🏠”,q:“房產問題找誰？”,ph:“房仲、代書”},{icon:“💼”,q:“公司 / 事業交接找誰？”,ph:“合夥人、同事”},{icon:“❤️”,q:“孩子需要人照顧時找誰？”,ph:“家人、摯友”}];
+
+function genLetter(topic,trigs,name){var tp=TOPICS.find(function(t){return t.id===topic});var n=name||“孩子”,sel=trigs.filter(function(t){return t.s});if(!sel.length)return””;var l=“親愛的”+n+”，\n\n如果你正在看這段文字，代表你正在面對一些關於”+(tp?tp.label:“人生”)+“的問題。我想跟你分享一些我走過的路。\n\n”;var ex=sel.filter(function(t){return t.c===“exp”}).map(function(t){return t.t});var em=sel.filter(function(t){return t.c===“emo”}).map(function(t){return t.t});var ad=sel.filter(function(t){return t.c===“adv”}).map(function(t){return t.t});if(ex.length)l+=“我也經歷過：”+ex.join(”、”)+”。每一段當下都很痛苦，但回頭看，都是讓我成長的養分。\n\n”;if(em.length)l+=“那些時候的心情：”+em.join(”、”)+”。如果你現在也有類似的感受，這些都是正常的，你不需要假裝堅強。\n\n”;if(ad.length){l+=“我最想告訴你的是：\n”;ad.forEach(function(a){l+=”• “+a+”\n”});l+=”\n”;}l+=“不管你現在幾歲，記住爸爸永遠站在你這邊。\n\n愛你的，\n爸爸”;return l}
+
+// Claude API letter generator (paid tier)
+function genLetterAI(topic,trigs,recipientName,callback){
+var tp=TOPICS.find(function(t){return t.id===topic});
+var sel=trigs.filter(function(t){return t.s});
+var exp=sel.filter(function(t){return t.c===“exp”}).map(function(t){return t.t});
+var emo=sel.filter(function(t){return t.c===“emo”}).map(function(t){return t.t});
+var adv=sel.filter(function(t){return t.c===“adv”}).map(function(t){return t.t});
+
+var prompt=“你是一個台灣的爸爸（或媽媽），正在寫一封信給你的家人「”+(recipientName||“孩子”)+”」。主題是「”+(tp?tp.label:“人生”)+”」。\n\n”;
+prompt+=“根據以下關鍵字，用第一人稱寫一封 250-350 字的家書。\n\n”;
+prompt+=”【你經歷過的事】：”+exp.join(”、”)+”\n”;
+prompt+=”【那時候的心情】：”+emo.join(”、”)+”\n”;
+prompt+=”【你想告訴他們的建議】：”+adv.join(”、”)+”\n\n”;
+prompt+=“要求：\n”;
+prompt+=”- 用台灣繁體中文，口語化，像真的在跟家人說話\n”;
+prompt+=”- 要有具體的場景描述和故事感，不要空泛\n”;
+prompt+=”- 把建議自然地融入故事中，不要用列點\n”;
+prompt+=”- 語氣溫暖但不煽情，直接但帶著愛\n”;
+prompt+=”- 開頭用「親愛的”+(recipientName||“孩子”)+”，」\n”;
+prompt+=”- 結尾用「爸爸」或適當的落款\n”;
+prompt+=”- 不要用「作為一個父親」「我想說」等 AI 常見的開頭\n”;
+prompt+=”- 直接寫信的內容，不要加任何前言或解釋\n”;
+
+fetch(“https://api.anthropic.com/v1/messages”,{
+method:“POST”,
+headers:{“Content-Type”:“application/json”},
+body:JSON.stringify({
+model:“claude-sonnet-4-20250514”,
+max_tokens:1000,
+messages:[{role:“user”,content:prompt}]
+})
+}).then(function(r){return r.json()}).then(function(data){
+var text=””;
+if(data.content){data.content.forEach(function(block){if(block.type===“text”)text+=block.text})}
+callback(text||genLetter(topic,trigs,recipientName))
+}).catch(function(err){
+console.error(“AI generation failed:”,err);
+callback(genLetter(topic,trigs,recipientName))
+})
+}
+function fmt(s){return Math.floor(s/60)+”:”+(s%60<10?“0”:””)+(s%60)}
+function useMedia(type){var s=us(“idle”),st=s[0],setSt=s[1];var u=us(null),url=u[0],setUrl=u[1];var d=us(null),data=d[0],setData=d[1];var du=us(0),dur=du[0],setDur=du[1];var e=us(null),err=e[0],setErr=e[1];var strm=ur(null),rec=ur(null),ch=ur([]),tmr=ur(null);var con=type===“video”?{video:{facingMode:“user”},audio:true}:{audio:true};var preview=uc(function(){setSt(“requesting”);setErr(null);return navigator.mediaDevices.getUserMedia(con).then(function(s){strm.current=s;setSt(“previewing”);return s}).catch(function(e){setErr(e.name===“NotAllowedError”?“需要允許使用”+(type===“video”?“鏡頭和麥克風”:“麥克風”):e.message);setSt(“error”);return null})},[type]);var start=uc(function(){if(!strm.current)return;ch.current=[];setDur(0);var m=type===“video”?(MediaRecorder.isTypeSupported(“video/webm”)?“video/webm”:“video/mp4”):(MediaRecorder.isTypeSupported(“audio/webm”)?“audio/webm”:“audio/mp4”);var r=new MediaRecorder(strm.current,{mimeType:m});rec.current=r;r.ondataavailable=function(e){if(e.data.size>0)ch.current.push(e.data)};r.onstop=function(){var b=new Blob(ch.current,{type:m});setUrl(URL.createObjectURL(b));var rd=new FileReader();rd.onloadend=function(){setData(rd.result)};rd.readAsDataURL(b);setSt(“recorded”)};r.start(1000);setSt(“recording”);tmr.current=setInterval(function(){setDur(function(d){return d+1})},1000)},[type]);var stop=uc(function(){if(rec.current&&rec.current.state!==“inactive”)try{rec.current.stop()}catch(e){}if(tmr.current){clearInterval(tmr.current);tmr.current=null}if(strm.current){strm.current.getTracks().forEach(function(t){t.stop()});strm.current=null}},[]);var reset=uc(function(){stop();if(url)URL.revokeObjectURL(url);setUrl(null);setData(null);setDur(0);setErr(null);setSt(“idle”)},[url,stop]);var cancel=uc(function(){if(strm.current){strm.current.getTracks().forEach(function(t){t.stop()});strm.current=null}if(tmr.current){clearInterval(tmr.current);tmr.current=null}if(rec.current&&rec.current.state!==“inactive”)try{rec.current.stop()}catch(e){}if(url)URL.revokeObjectURL(url);setUrl(null);setData(null);setDur(0);setErr(null);setSt(“idle”)},[url]);return{st:st,url:url,data:data,dur:dur,err:err,stream:strm.current,preview:preview,start:start,stop:stop,reset:reset,cancel:cancel}}
+
+// ── Auth screens (compact) ──
+function Welcome(p){var s=us(0),step=s[0],ss=s[1];var sl=[{i:“🕯️”,t:“在你不在的日子裡”,s:“讓最重要的人，還能聽見你的聲音、感受你的溫度。”},{i:“💬”,t:“像跟家人坐下來聊天”,s:“AI 引導你說出平常說不出口的話。”},{i:“🤲”,t:“在他們需要的時候”,s:“設定好時間，讓孩子在每個人生關卡，都有你陪著。”}];var c=sl[step];var dots=sl.map(function(_,i){return h(“div”,{key:i,className:“od”+(i===step?” a”:””),onClick:function(){ss(i)}})});if(step<2)return h(“div”,{className:“as”},h(“div”,{className:“al”},h(“div”,{style:{fontSize:64,marginBottom:16}},c.i),step===0&&h(“h1”,{style:{fontFamily:“var(–fs)”,fontWeight:900,fontSize:28,color:“var(–w)”}},“Somewhen”)),h(“div”,{className:“atl”},c.t),h(“div”,{className:“asu”},c.s),h(“div”,{className:“odd”},dots),h(“div”,{style:{marginTop:36}},h(“button”,{className:“sb”,onClick:function(){ss(step+1)}},“下一步”)));return h(“div”,{className:“as”},h(“div”,{className:“al”},h(“div”,{style:{fontSize:64,marginBottom:16}},c.i)),h(“div”,{className:“atl”},c.t),h(“div”,{className:“asu”},c.s),h(“div”,{className:“odd”},dots),h(“div”,{style:{marginTop:36}},h(“div”,{className:“asb”},h(“button”,{className:“ab ap”,onClick:function(){p.go({name:“User”,email:“user@icloud.com”,avatar:“🍎”})}},“🍎 使用 Apple 帳號登入”),h(“button”,{className:“ab ag”,onClick:function(){p.go({name:“User”,email:“user@gmail.com”,avatar:“🌐”})}},“🌐 使用 Google 帳號登入”)),h(“div”,{className:“adv”},h(“div”,{className:“adl”}),h(“div”,{className:“adt”},“或使用 Email”),h(“div”,{className:“adl”})),h(“div”,{style:{display:“flex”,gap:12}},h(“button”,{className:“sb”,style:{flex:1,background:“var(–bg2)”,color:“var(–t1)”,border:“1px solid rgba(139,107,74,.12)”,boxShadow:“var(–sh)”},onClick:p.onL},“登入”),h(“button”,{className:“sb”,style:{flex:1},onClick:p.onR},“免費註冊”)),h(“div”,{className:“atm”},“繼續即表示你同意服務條款和隱私政策”)))}
+function Login(p){var e=us(””),em=e[0],sE=e[1];var pw=us(””),ps=pw[0],sP=pw[1];var er=us(””),err=er[0],sR=er[1];var lo=us(false),ld2=lo[0],sL=lo[1];function go(){sR(””);if(!em.trim()){sR(“請輸入 Email”);return}if(!ps){sR(“請輸入密碼”);return}sL(true);setTimeout(function(){sL(false);p.go({name:em.split(”@”)[0],email:em.trim(),avatar:“✉️”})},600)}return h(“div”,{className:“as”},h(“div”,{style:{marginBottom:24}},h(“button”,{className:“bb”,onClick:p.bk},“←”)),h(“div”,{className:“al”},h(“div”,{style:{fontSize:48,marginBottom:12}},“🕯️”),h(“h1”,{style:{fontFamily:“var(–fs)”,fontWeight:900,fontSize:24,color:“var(–w)”}},“Somewhen”)),h(“div”,{className:“atl”},“歡迎回來”),h(“div”,{className:“asu”,style:{marginBottom:24}},“登入繼續錄製你的人生故事。”),err&&h(“div”,{className:“aer”},err),h(“div”,{style:{display:“flex”,flexDirection:“column”,gap:12}},h(“input”,{className:“ain”,type:“email”,placeholder:“Email”,value:em,onChange:function(e){sE(e.target.value)}}),h(“input”,{className:“ain”,type:“password”,placeholder:“密碼”,value:ps,onChange:function(e){sP(e.target.value)}}),h(“button”,{className:“sb”,onClick:go,disabled:ld2},ld2?“登入中…”:“登入”)),h(“div”,{className:“aft”},“還沒有帳號？ “,h(“span”,{className:“alk”,onClick:p.sw},“免費註冊”)))}
+function Register(p){var n=us(””),nm=n[0],sN=n[1];var e=us(””),em=e[0],sE=e[1];var pw=us(””),ps=pw[0],sP=pw[1];var er=us(””),err=er[0],sR=er[1];var lo=us(false),ld2=lo[0],sL=lo[1];function go(){sR(””);if(!nm.trim()){sR(“請輸入名字”);return}if(!em.trim()){sR(“請輸入 Email”);return}if(ps.length<6){sR(“密碼至少 6 位”);return}sL(true);setTimeout(function(){sL(false);p.go({name:nm.trim(),email:em.trim(),avatar:“✉️”})},600)}return h(“div”,{className:“as”},h(“div”,{style:{marginBottom:24}},h(“button”,{className:“bb”,onClick:p.bk},“←”)),h(“div”,{className:“al”},h(“div”,{style:{fontSize:48,marginBottom:12}},“🕯️”),h(“h1”,{style:{fontFamily:“var(–fs)”,fontWeight:900,fontSize:24,color:“var(–w)”}},“Somewhen”)),h(“div”,{className:“atl”},“開始留下你的故事”),h(“div”,{className:“asu”,style:{marginBottom:24}},“建立帳號，讓最重要的人在未來聽見你。”),err&&h(“div”,{className:“aer”},err),h(“div”,{style:{display:“flex”,flexDirection:“column”,gap:12}},h(“input”,{className:“ain”,type:“text”,placeholder:“你的名字”,value:nm,onChange:function(e){sN(e.target.value)}}),h(“input”,{className:“ain”,type:“email”,placeholder:“Email”,value:em,onChange:function(e){sE(e.target.value)}}),h(“input”,{className:“ain”,type:“password”,placeholder:“密碼（至少 6 位）”,value:ps,onChange:function(e){sP(e.target.value)}}),h(“button”,{className:“sb”,onClick:go,disabled:ld2},ld2?“建立中…”:“免費註冊”)),h(“div”,{className:“aft”},“已有帳號？ “,h(“span”,{className:“alk”,onClick:p.sw},“登入”)))}
+
+// ── Family Onboarding (single page) ──
+function FamilyOnboard(p){
+var nm=us(””),name=nm[0],sName=nm[1];
+var fm=us(p.data.family||[]),members=fm[0],sMembers=fm[1];
+var mn=us(””),mname=mn[0],sMN=mn[1];
+var mk=us(””),mnick=mk[0],sMK=mk[1];
+var mr=us(“son”),mrel=mr[0],sMR=mr[1];
+var mb=us(””),mbday=mb[0],sMB=mb[1];
+var ms=us(””),mspecial=ms[0],sMS=ms[1];
+var md=us(””),mdate=md[0],sMD=md[1];
+
+function addMember(){
+if(!mname.trim())return;
+var newM={id:Date.now().toString(36),name:mname.trim(),nickname:mnick.trim()||mname.trim(),rel:mrel,birthday:mbday,icon:REL_OPTIONS.find(function(r){return r.id===mrel}).icon,specialDate:mspecial.trim()&&mdate?{name:mspecial.trim(),date:mdate}:null};
+sMembers(members.concat([newM]));
+sMN(””);sMK(””);sMB(””);sMS(””);sMD(””)
+}
+function removeMember(id){sMembers(members.filter(function(m){return m.id!==id}))}
+function finish(){
+var ud=Object.assign({},p.user,{displayName:name.trim()||p.user.name});
+localStorage.setItem(“tv-user”,JSON.stringify(ud));p.setUser(ud);
+var dates=members.filter(function(m){return m.specialDate}).map(function(m){return{id:“sd_”+m.id,name:m.specialDate.name+”（”+(m.nickname||m.name)+”）”,date:m.specialDate.date,icon:“💝”}});
+var d=Object.assign({},p.data);d.family=members;d.dates=(d.dates||[]).concat(dates);p.save(d);
+p.done()
+}
+var relObj=REL_OPTIONS.find(function(r){return r.id===mrel});
+
+return h(“div”,{className:“S”,style:{paddingTop:36}},
+h(“div”,{style:{textAlign:“center”,marginBottom:28}},
+h(“div”,{style:{fontSize:44,marginBottom:10}},“👨‍👩‍👧‍👦”),
+h(“div”,{style:{fontFamily:“var(–fs)”,fontSize:22,fontWeight:900,color:“var(–w)”,marginBottom:6}},“認識你的家庭”),
+h(“div”,{style:{fontSize:13,color:“var(–t2)”,lineHeight:1.7}},“加入家人後，所有留言、提醒都會用他們的名字。”)
+),
+h(“div”,{className:“fg”},
+h(“div”,{className:“fl”},“你希望怎麼稱呼你？”),
+h(“input”,{className:“fi”,placeholder:“暱稱（例：老爸、阿明）”,value:name,onChange:function(e){sName(e.target.value)}})
+),
+members.length>0&&h(“div”,{style:{marginBottom:16}},
+h(“div”,{className:“fl”},“已加入的家人”),
+members.map(function(m){return h(“div”,{key:m.id,style:{display:“flex”,alignItems:“center”,gap:10,padding:“12px 14px”,background:“var(–bg2)”,borderRadius:“var(–rs)”,marginBottom:8,boxShadow:“var(–sh)”}},
+h(“span”,{style:{fontSize:24}},m.icon),
+h(“div”,{style:{flex:1}},
+h(“div”,{style:{fontFamily:“var(–fs)”,fontWeight:700,fontSize:14,color:“var(–w)”}},m.nickname),
+h(“div”,{style:{fontSize:11,color:“var(–t3)”,lineHeight:1.5}},
+m.name+(m.birthday?” · 🎂 “+m.birthday:””)+(m.specialDate?” · 💝 “+m.specialDate.name+” “+m.specialDate.date:””)
+)
+),
+h(“button”,{style:{background:“none”,border:“none”,color:“var(–t3)”,fontSize:16,cursor:“pointer”,padding:8},onClick:function(){removeMember(m.id)}},“✕”)
+)})
+),
+h(“div”,{style:{background:“var(–bg2)”,borderRadius:“var(–r)”,padding:18,boxShadow:“var(–sh)”,marginBottom:16}},
+h(“div”,{style:{fontFamily:“var(–fs)”,fontWeight:700,fontSize:15,color:“var(–w)”,marginBottom:14}},“➕ 加入一位家人”),
+h(“div”,{className:“fl”},“關係”),
+h(“div”,{className:“cr”,style:{marginBottom:12}},REL_OPTIONS.map(function(r){return h(“div”,{key:r.id,className:“ch”+(mrel===r.id?” s”:””),onClick:function(){sMR(r.id)},style:{fontSize:11}},r.icon,” “,r.label)})),
+h(“div”,{style:{display:“flex”,gap:8,marginBottom:8}},
+h(“input”,{className:“fi”,placeholder:“姓名”,value:mname,onChange:function(e){sMN(e.target.value)},style:{flex:1}}),
+h(“input”,{className:“fi”,placeholder:“小名”,value:mnick,onChange:function(e){sMK(e.target.value)},style:{flex:1}})
+),
+h(“div”,{className:“fl”,style:{marginTop:4}},“🎂 生日（到了會自動提醒你錄一段話）”),
+h(“input”,{className:“fi”,type:“date”,value:mbday,onChange:function(e){sMB(e.target.value)},style:{marginBottom:10}}),
+h(“div”,{className:“fl”},“💝 跟這個人有關的特別日子（選填）”),
+h(“div”,{style:{display:“flex”,gap:8,marginBottom:8}},
+h(“input”,{className:“fi”,placeholder:“例：結婚紀念日”,value:mspecial,onChange:function(e){sMS(e.target.value)},style:{flex:1}}),
+h(“input”,{className:“fi”,type:“date”,value:mdate,onChange:function(e){sMD(e.target.value)},style:{flex:1}})
+),
+h(“button”,{className:“sb”,disabled:!mname.trim(),onClick:addMember,style:{marginTop:4}},
+“加入”+(relObj?” “+relObj.icon+” “+(mnick.trim()||mname.trim()||relObj.label):””)
+)
+),
+h(“button”,{className:“sb”,style:{background:members.length>0?“linear-gradient(135deg,var(–ac),#A05A3A)”:“var(–bg3)”,color:members.length>0?”#fff”:“var(–t2)”},onClick:finish},
+members.length>0?“🕯️ 開始使用 Somewhen（”+members.length+” 位家人）”:“先跳過，之後再設定”
+)
+)
+}
+
+// ── Home ──
+function Home(p){var tc={};p.data.msgs.forEach(function(m){tc[m.topic]=(tc[m.topic]||0)+1});var t=TIERS[p.tier];var cl=calcChecklist(p.data);var wq=getWeeklyQ();var events=getUpcomingEvents(p.data);var mc=getMonthlyChallenge(p.data);var monthNames=[“一月”,“二月”,“三月”,“四月”,“五月”,“六月”,“七月”,“八月”,“九月”,“十月”,“十一月”,“十二月”];return h(“div”,{className:“S”},
+h(“div”,{className:“hd”},h(“div”,{style:{fontSize:40,marginBottom:8}},“🕯️”),h(“h1”,null,“Somewhen”),h(“p”,null,“把人生的智慧，留給未來的他們”),h(“div”,{className:“tbg”,style:{background:t.c+“18”,color:t.c,borderColor:t.c+“33”}},t.b,” · “,t.l)),
+// ── 安心指數 ──
+h(“div”,{style:{background:“var(–bg2)”,borderRadius:“var(–r)”,padding:18,marginBottom:14,boxShadow:“var(–sh)”,border:“1px solid rgba(139,107,74,.06)”}},
+h(“div”,{style:{display:“flex”,justifyContent:“space-between”,alignItems:“center”,marginBottom:10}},h(“div”,{style:{fontFamily:“var(–fs)”,fontWeight:700,fontSize:15,color:“var(–w)”}},“🛡️ 家人安心指數”),h(“div”,{style:{fontFamily:“var(–fs)”,fontWeight:900,fontSize:22,color:cl.pct===100?“var(–green)”:“var(–ac)”}},cl.pct+”%”)),
+h(“div”,{style:{height:6,background:“var(–bg3)”,borderRadius:3,overflow:“hidden”,marginBottom:12}},h(“div”,{style:{height:“100%”,width:cl.pct+”%”,background:cl.pct===100?“var(–green)”:“var(–ac)”,borderRadius:3,transition:“width .5s”}})),
+cl.items.map(function(item){return h(“div”,{key:item.id,style:{display:“flex”,alignItems:“center”,gap:10,padding:“6px 0”,fontSize:13,color:item.done?“var(–green)”:“var(–t3)”}},h(“span”,{style:{fontSize:16}},item.done?“✅”:“⬜”),item.icon+” “+item.label)})
+),
+// ── 每月家書挑戰 ──
+h(“div”,{style:{background:mc.done?“rgba(90,158,110,.06)”:“rgba(192,112,80,.04)”,border:“1px solid “+(mc.done?“rgba(90,158,110,.15)”:“rgba(192,112,80,.1)”),borderRadius:“var(–r)”,padding:16,marginBottom:14,display:“flex”,alignItems:“center”,gap:14}},
+h(“div”,{style:{fontSize:28}},mc.done?“🏅”:“📝”),
+h(“div”,{style:{flex:1}},
+h(“div”,{style:{fontFamily:“var(–fs)”,fontWeight:700,fontSize:14,color:mc.done?“var(–green)”:“var(–w)”}},mc.done?monthNames[mc.month-1]+“家書完成！”:monthNames[mc.month-1]+“家書挑戰”),
+h(“div”,{style:{fontSize:12,color:“var(–t3)”,marginTop:2}},mc.done?“這個月已經錄了 “+mc.count+” 段”:“這個月還沒錄，找個時間留一段話吧”)
+)),
+// ── 即將到來的日子 ──
+events.length>0&&h(“div”,{style:{marginBottom:14}},
+h(“div”,{style:{fontFamily:“var(–fs)”,fontWeight:700,fontSize:15,color:“var(–w)”,marginBottom:10}},“📅 即將到來”),
+events.map(function(ev){return h(“div”,{key:ev.name+ev.date,style:{background:“var(–bg2)”,borderRadius:“var(–rs)”,padding:14,marginBottom:8,boxShadow:“var(–sh)”,display:“flex”,alignItems:“center”,gap:12,cursor:“pointer”,WebkitTapHighlightColor:“transparent”},onClick:function(){p.goRec(ev.person||””)}},
+h(“div”,{style:{fontSize:24}},ev.icon),
+h(“div”,{style:{flex:1}},
+h(“div”,{style:{fontFamily:“var(–fs)”,fontWeight:700,fontSize:13,color:“var(–w)”}},ev.name),
+h(“div”,{style:{fontSize:12,color:“var(–t3)”}},ev.prompt)
+),
+h(“div”,{style:{textAlign:“right”}},
+h(“div”,{style:{fontSize:13,fontWeight:700,color:ev.daysAway<=7?“var(–ac)”:“var(–t3)”}},ev.daysAway===0?“今天！”:ev.daysAway+“天後”),
+h(“div”,{style:{fontSize:10,color:“var(–ac)”,cursor:“pointer”,marginTop:4},onClick:function(e){e.stopPropagation();downloadICS(ev.name,ev.date,ev.prompt)}},“📅 加入行事曆”)
+)
+)})
+),
+// ── 每週一問 ──
+h(“div”,{style:{background:“linear-gradient(135deg,rgba(192,112,80,.06),rgba(139,107,74,.04))”,border:“1px solid rgba(192,112,80,.12)”,borderRadius:“var(–r)”,padding:18,marginBottom:14,cursor:“pointer”,WebkitTapHighlightColor:“transparent”},onClick:function(){p.goRec(””)}},
+h(“div”,{style:{fontSize:11,color:“var(–ac)”,fontWeight:600,marginBottom:8,letterSpacing:1}},“💬 本週提問”),
+h(“div”,{style:{fontFamily:“var(–fs)”,fontSize:16,fontWeight:700,color:“var(–w)”,lineHeight:1.6,marginBottom:10}},wq),
+h(“div”,{style:{fontSize:12,color:“var(–ac)”,fontWeight:500}},“點擊回答 →”)
+),
+// ── 給未來的自己 ──
+h(“div”,{style:{background:“var(–bg2)”,border:“1px solid rgba(91,143,168,.12)”,borderRadius:“var(–r)”,padding:16,marginBottom:14,cursor:“pointer”,boxShadow:“var(–sh)”,display:“flex”,alignItems:“center”,gap:14},onClick:function(){p.goRec(””)}},
+h(“div”,{style:{fontSize:32}},“🪞”),
+h(“div”,null,h(“div”,{style:{fontFamily:“var(–fs)”,fontWeight:700,fontSize:14,color:“var(–blue)”,marginBottom:2}},“給未來的自己”),h(“div”,{style:{fontSize:12,color:“var(–t3)”}},“寫一封信，1 年後 / 5 年後打開”))
+),
+// Stats
+h(“div”,{className:“sr”},
+h(“div”,{className:“sc”},h(“div”,{className:“sn”},p.data.msgs.length),h(“div”,{className:“sl”},“則留言”)),
+h(“div”,{className:“sc”},h(“div”,{className:“sn”},p.data.vault.length),h(“div”,{className:“sl”},“筆資產”)),
+h(“div”,{className:“sc”},h(“div”,{className:“sn”},p.data.capsules.length),h(“div”,{className:“sl”},“個膠囊”))
+),
+h(“div”,{className:“st”},“選一個主題，留一段話”),
+h(“div”,{className:“tg”},TOPICS.map(function(tp){return h(“div”,{key:tp.id,className:“cd”,onClick:function(){p.go(tp.id)}},tc[tp.id]&&h(“span”,{className:“cb”},tc[tp.id]),h(“span”,{className:“ic”},tp.icon),h(“div”,{className:“lb”},tp.label),h(“div”,{className:“ds”},tp.desc))}))
+)}
+
+// ── Vault (Treasure Map + Contacts + Capsules + Dead Man Switch) ──
+function Vault(p){
+var tb=us(“map”),tab=tb[0],setTab=tb[1];
+// Vault items
+var ni=us(””),nit=ni[0],sNI=ni[1];var nc=us(“crypto”),ncat=nc[0],sNC=nc[1];var nl=us(””),nloc=nl[0],sNL=nl[1];
+// Contact items  
+var cq=us(0),cqi=cq[0],sCQ=cq[1];var ca=us(””),cans=ca[0],sCA=ca[1];var cp=us(””),cph=cp[0],sCP=cp[1];
+// Capsule items
+var ct=us(””),ctit=ct[0],sCT=ct[1];var cb=us(””),cbod=cb[0],sCB=cb[1];var cd=us(””),cdat=cd[0],sCD=cd[1];var cr=us(””),crec=cr[0],sCR=cr[1];
+var ce=us(””),cemail=ce[0],sCE=ce[1];var cme=us(“notify”),cmethod=cme[0],sCM=cme[1];
+function addVault(){if(!nit.trim()||!nloc.trim())return;var d=Object.assign({},p.data);d.vault=d.vault.concat([{id:Date.now().toString(36),cat:ncat,title:nit.trim(),loc:nloc.trim()}]);p.save(d);sNI(””);sNL(””);p.flash(“已新增 ✓”)}
+function delVault(id){var d=Object.assign({},p.data);d.vault=d.vault.filter(function(v){return v.id!==id});p.save(d)}
+function addContact(){if(!cans.trim())return;var d=Object.assign({},p.data);d.contacts=d.contacts.concat([{id:Date.now().toString(36),q:CONTACT_QS[cqi].q,icon:CONTACT_QS[cqi].icon,name:cans.trim(),phone:cph.trim()}]);p.save(d);sCA(””);sCP(””);p.flash(“已新增 ✓”)}
+function delContact(id){var d=Object.assign({},p.data);d.contacts=d.contacts.filter(function(c){return c.id!==id});p.save(d)}
+function addCapsule(){if(!ctit.trim()||!cbod.trim()||!cdat)return;var d=Object.assign({},p.data);d.capsules=d.capsules.concat([{id:Date.now().toString(36),title:ctit.trim(),body:cbod.trim(),date:cdat,recipient:crec.trim()||“全家人”,email:cemail.trim(),method:cmethod,created:new Date().toISOString(),shared:false}]);p.save(d);sCT(””);sCB(””);sCD(””);sCR(””);sCE(””);p.flash(“已設定時光膠囊 ✓”)}
+function shareCapsule(c){
+var text=“🕯️ “+c.title+”\n\n”+c.body+”\n\n—— 留給 “+c.recipient+” ❤️\nSomewhen · 把人生的智慧留給未來的他們”;
+if(navigator.share){navigator.share({title:c.title,text:text}).then(function(){
+var d=Object.assign({},p.data);d.capsules=d.capsules.map(function(x){return x.id===c.id?Object.assign({},x,{shared:true}):x});p.save(d);p.flash(“已分享 ✓”)
+}).catch(function(){})}else{navigator.clipboard.writeText(text);p.flash(“已複製到剪貼簿 ✓”)}
+}
+function sendCapsuleEmail(c){
+var subject=encodeURIComponent(“🕯️ “+c.title+” — Somewhen 時光膠囊”);
+var body=encodeURIComponent(c.body+”\n\n—— 留給 “+c.recipient+” ❤️\n\n來自 Somewhen\n把人生的智慧，留給未來的他們”);
+var mailto=“mailto:”+(c.email||””)+”?subject=”+subject+”&body=”+body;
+window.open(mailto);
+var d=Object.assign({},p.data);d.capsules=d.capsules.map(function(x){return x.id===c.id?Object.assign({},x,{shared:true}):x});p.save(d);p.flash(“已開啟郵件 ✓”)
+}
+function isCapsuleReady(c){return new Date(c.date)<=new Date()}
+function delCapsule(id){var d=Object.assign({},p.data);d.capsules=d.capsules.filter(function(c){return c.id!==id});p.save(d)}
+function togDMS(){var d=Object.assign({},p.data);d.dms=Object.assign({},d.dms,{enabled:!d.dms.enabled});p.save(d)}
+
+return h(“div”,{className:“S”},
+h(“div”,{className:“rh”},h(“button”,{className:“bb”,onClick:p.back},“←”),h(“div”,{className:“rt”},“金庫”)),
+// Tabs
+h(“div”,{className:“stb”},[“map”,“contacts”,“capsule”,“dms”].map(function(t,i){var labels=[“🗺️ 藏寶圖”,“👥 聯絡人”,“⏰ 時光膠囊”,“💀 安全開關”];return h(“button”,{key:t,className:tab===t?“a”:””,onClick:function(){setTab(t)}},labels[i])})),
+
+// ── Treasure Map ──
+tab===“map”&&h(“div”,null,
+h(“div”,{style:{fontSize:13,color:“var(–t2)”,marginBottom:16,lineHeight:1.7,background:“var(–bg3)”,padding:14,borderRadius:“var(–rs)”}},“🗺️ 只記錄「東西放在哪」，”,h(“strong”,null,“不要輸入密碼或私鑰”),”。讓家人知道去哪裡找就好。”),
+p.data.vault.map(function(v){var cat=VAULT_CATS.find(function(c){return c.id===v.cat});return h(“div”,{key:v.id,className:“vi”},h(“div”,{className:“vi-h”},h(“div”,{className:“vi-t”},(cat?cat.icon+” “:””)+(cat?cat.label:v.cat)),h(“div”,{className:“vi-c”},v.cat)),h(“div”,{className:“vi-b”},h(“strong”,null,v.title),h(“br”),v.loc),h(“div”,{className:“vi-d”},h(“button”,{className:“vi-db”,onClick:function(){delVault(v.id)}},“刪除”)))}),
+h(“div”,{style:{background:“var(–bg2)”,border:“1px solid rgba(139,107,74,.08)”,borderRadius:“var(–r)”,padding:18,marginTop:12,boxShadow:“var(–sh)”}},
+h(“div”,{style:{fontFamily:“var(–fs)”,fontWeight:700,fontSize:14,color:“var(–w)”,marginBottom:12}},”+ 新增資產線索”),
+h(“div”,{className:“cr”,style:{marginBottom:10}},VAULT_CATS.map(function(c){return h(“div”,{key:c.id,className:“ch”+(ncat===c.id?” s”:””),onClick:function(){sNC(c.id)}},c.icon,” “,c.label)})),
+h(“input”,{className:“fi”,placeholder:“名稱（如：Binance 帳戶）”,value:nit,onChange:function(e){sNI(e.target.value)},style:{marginBottom:8}}),
+h(“textarea”,{className:“ft”,style:{minHeight:80},placeholder:“放在哪裡？（如：書房第三個抽屜《百年孤寂》第 50 頁）”,value:nloc,onChange:function(e){sNL(e.target.value)}}),
+h(“button”,{className:“sb”,disabled:!nit.trim()||!nloc.trim(),onClick:addVault,style:{marginTop:8}},”+ 新增”)
+)),
+
+// ── Contacts Matrix ──
+tab===“contacts”&&h(“div”,null,
+h(“div”,{style:{fontSize:13,color:“var(–t2)”,marginBottom:16,lineHeight:1.7,background:“var(–bg3)”,padding:14,borderRadius:“var(–rs)”}},“👥 當家人不知道找誰的時候，這張表就是他們的救命索。”),
+p.data.contacts.map(function(c){return h(“div”,{key:c.id,className:“cm”},h(“div”,{className:“cm-i”},c.icon),h(“div”,{style:{flex:1}},h(“div”,{className:“cm-q”},c.q),h(“div”,{className:“cm-a”},c.name),c.phone&&h(“div”,{className:“cm-p”},c.phone),h(“div”,{className:“vi-d”},h(“button”,{className:“vi-db”,onClick:function(){delContact(c.id)}},“刪除”))))}),
+h(“div”,{style:{background:“var(–bg2)”,border:“1px solid rgba(139,107,74,.08)”,borderRadius:“var(–r)”,padding:18,marginTop:12,boxShadow:“var(–sh)”}},
+h(“div”,{style:{fontFamily:“var(–fs)”,fontWeight:700,fontSize:14,color:“var(–w)”,marginBottom:12}},”+ 新增聯絡人”),
+h(“div”,{className:“fl”},“這個人負責什麼問題？”),
+h(“div”,{className:“cr”,style:{marginBottom:10}},CONTACT_QS.map(function(q,i){return h(“div”,{key:i,className:“ch”+(cqi===i?” s”:””),onClick:function(){sCQ(i)},style:{fontSize:11}},q.icon,” “,q.q.replace(”？”,””))})),
+h(“input”,{className:“fi”,placeholder:“聯絡人姓名”,value:cans,onChange:function(e){sCA(e.target.value)},style:{marginBottom:8}}),
+h(“input”,{className:“fi”,placeholder:“電話 / 聯絡方式（選填）”,value:cph,onChange:function(e){sCP(e.target.value)}}),
+h(“button”,{className:“sb”,disabled:!cans.trim(),onClick:addContact,style:{marginTop:8}},”+ 新增”)
+)),
+
+// ── Time Capsule ──
+tab===“capsule”&&h(“div”,null,
+h(“div”,{style:{fontSize:13,color:“var(–t2)”,marginBottom:16,lineHeight:1.7,background:“var(–bg3)”,padding:14,borderRadius:“var(–rs)”}},“⏰ 設定未來的日期，到了那天提醒你分享給家人。也可以設定 Email 自動寄出明信片。”),
+// Capsule list with status
+p.data.capsules.map(function(c){
+var ready=isCapsuleReady(c);
+var daysLeft=Math.max(0,Math.ceil((new Date(c.date)-new Date())/(1000*60*60*24)));
+return h(“div”,{key:c.id,className:“cap”,style:{borderLeft:ready?“3px solid var(–ac)”:“3px solid var(–bg3)”}},
+h(“div”,{className:“cap-h”},
+h(“div”,{className:“cap-t”},c.title),
+h(“div”,{className:“cap-d”,style:{background:ready?“rgba(192,112,80,.12)”:“rgba(90,158,110,.08)”,color:ready?“var(–ac)”:“var(–green)”}},ready?(c.shared?“✅ 已送達”:“🔓 可以送出了”):daysLeft+” 天後”)
+),
+h(“div”,{className:“cap-b”},c.body.length>60?c.body.slice(0,60)+”…”:c.body),
+h(“div”,{style:{display:“flex”,justifyContent:“space-between”,alignItems:“center”,marginTop:8}},
+h(“div”,{className:“cap-r”,style:{margin:0}},“留給 “+c.recipient+(c.email?” · “+c.email:””)),
+h(“div”,{style:{display:“flex”,gap:6}},
+ready&&!c.shared&&h(“button”,{className:“vi-db”,style:{background:“var(–acs)”,borderColor:“var(–ac)”,color:“var(–ac)”,fontWeight:600},onClick:function(){shareCapsule(c)}},“📤 分享”),
+ready&&!c.shared&&c.email&&h(“button”,{className:“vi-db”,style:{background:“rgba(91,143,168,.08)”,borderColor:“rgba(91,143,168,.2)”,color:“var(–blue)”},onClick:function(){sendCapsuleEmail(c)}},“📧 寄信”),
+h(“button”,{className:“vi-db”,onClick:function(){delCapsule(c.id)}},“刪除”)
+)
+)
+)}),
+// Add new capsule
+h(“div”,{style:{background:“var(–bg2)”,border:“1px solid rgba(139,107,74,.08)”,borderRadius:“var(–r)”,padding:18,marginTop:12,boxShadow:“var(–sh)”}},
+h(“div”,{style:{fontFamily:“var(–fs)”,fontWeight:700,fontSize:14,color:“var(–w)”,marginBottom:12}},”+ 新增時光膠囊”),
+h(“input”,{className:“fi”,placeholder:“標題（如：小安 18 歲生日快樂）”,value:ctit,onChange:function(e){sCT(e.target.value)},style:{marginBottom:8}}),
+h(“textarea”,{className:“ft”,style:{minHeight:100},placeholder:“你想說的話…\n\n想像他們在那個特別的日子打開這段文字。”,value:cbod,onChange:function(e){sCB(e.target.value)}}),
+// Recipient + date
+h(“div”,{style:{display:“flex”,gap:8,marginTop:8}},
+h(“input”,{className:“fi”,placeholder:“留給誰”,value:crec,onChange:function(e){sCR(e.target.value)},style:{flex:1}}),
+h(“input”,{className:“fi”,type:“date”,value:cdat,onChange:function(e){sCD(e.target.value)},style:{flex:1}})
+),
+// Delivery method
+h(“div”,{style:{marginTop:12}},
+h(“div”,{className:“fl”},“送達方式”),
+h(“div”,{style:{display:“flex”,gap:8,marginBottom:8}},
+h(“div”,{className:“ch”+(cmethod===“notify”?” s”:””),onClick:function(){sCM(“notify”)},style:{flex:1,textAlign:“center”}},“📱 到時提醒我分享”),
+h(“div”,{className:“ch”+(cmethod===“email”?” s”:””),onClick:function(){sCM(“email”)},style:{flex:1,textAlign:“center”}},“📧 用 Email 寄出”)
+),
+cmethod===“email”&&h(“input”,{className:“fi”,type:“email”,placeholder:“收件人 Email”,value:cemail,onChange:function(e){sCE(e.target.value)},style:{marginBottom:8}}),
+cmethod===“notify”&&h(“div”,{style:{fontSize:12,color:“var(–t3)”,lineHeight:1.6,padding:“8px 0”}},“到了設定的日期，Somewhen 會提醒你。你可以選擇用 LINE、WhatsApp、Telegram 或任何方式親手分享給對方。”)
+),
+h(“button”,{className:“sb”,disabled:!ctit.trim()||!cbod.trim()||!cdat,onClick:addCapsule,style:{marginTop:8}},“⏰ 設定膠囊”+(cdat?” · “+cdat:””))
+)),
+
+// ── Dead Man’s Switch ──
+tab===“dms”&&h(“div”,null,
+h(“div”,{className:“dms”},
+h(“div”,{className:“dms-h”},“💀 安全開關（Dead Man’s Switch）”),
+h(“div”,{className:“dms-p”},“如果你超過一段時間沒有登入確認「我還在」，系統會自動通知你的可信聯絡人，並開始解鎖流程。”),
+h(“div”,{className:“dms-s”},h(“div”,{className:“dms-sl”},“啟用安全開關”),h(“div”,{onClick:togDMS,style:{cursor:“pointer”}},h(“div”,{className:“gs”+(p.data.dms.enabled?” on”:””)},h(“div”,{className:“gd”})))),
+h(“div”,{className:“dms-s”},h(“div”,{className:“dms-sl”},“確認間隔”),h(“div”,{className:“dms-sv”},p.data.dms.interval+” 天”)),
+h(“div”,{className:“dms-s”},h(“div”,{className:“dms-sl”},“見證人數量”),h(“div”,{className:“dms-sv”},“需 2/3 人確認”)),
+h(“div”,{style:{fontSize:12,color:“var(–t3)”,marginTop:12,lineHeight:1.6}},“運作方式：系統每 “+p.data.dms.interval+” 天發送確認信。若連續 3 次未回應，將通知見證人。需 3 位見證人中的 2 位確認後，才會解鎖你的金庫和留言給繼承人。”)
+),
+h(“div”,{style:{background:“rgba(192,112,80,.06)”,border:“1px solid rgba(192,112,80,.12)”,borderRadius:“var(–rs)”,padding:14,fontSize:13,color:“var(–ac)”,lineHeight:1.6}},“⚠️ 這個功能需要後端伺服器支援。目前為 UI 展示，正式版將接入完整的定時確認與多重簽署機制。”)
+)
+)}
+
+// ── Record (text with guided writing + photo + audio/video) ──
+function Rec(p){var ms=TIERS[p.tier].m;var s=us(“text”),mode=s[0],sM=s[1];var tp=us(p.topic||””),topic=tp[0],sT=tp[1];var ti=us(””),title=ti[0],sTi=ti[1];var bd=us(””),body=bd[0],sB=bd[1];var rc=us([]),recips=rc[0],sR=rc[1];var ag=us(””),age=ag[0],sA=ag[1];var ws=us(“pick”),wStep=ws[0],sW=ws[1];var tr=us([]),trigs=tr[0],sTr=tr[1];
+// Photo upload
+var ph=us([]),photos=ph[0],sPhotos=ph[1];var photoRef=ur(null);
+var gl=us(false),genLoading=gl[0],sGL=gl[1]; // AI generation loading
+function addPhoto(e){var files=Array.from(e.target.files);files.forEach(function(f){if(!f.type.startsWith(“image/”)&&!f.type.startsWith(“video/”))return;var reader=new FileReader();reader.onloadend=function(){sPhotos(function(prev){return prev.concat([{id:Date.now().toString(36)+Math.random().toString(36).slice(2,4),data:reader.result,type:f.type.startsWith(“video/”)?“video”:“image”,name:f.name}])})};reader.readAsDataURL(f)});e.target.value=””}
+function removePhoto(id){sPhotos(photos.filter(function(p2){return p2.id!==id}))}
+var aud=useMedia(“audio”),vid=useMedia(“video”);var liveRef=ur(null);var media=mode===“video”?vid:aud;ue(function(){if(liveRef.current&&media.stream&&mode===“video”)liveRef.current.srcObject=media.stream},[media.st,media.stream,mode]);ue(function(){if(topic&&TRG[topic]){var t=TRG[topic];sTr([].concat(t.exp.map(function(x){return{t:x,c:“exp”,s:false}}),t.emo.map(function(x){return{t:x,c:“emo”,s:false}}),t.adv.map(function(x){return{t:x,c:“adv”,s:false}})));sW(“pick”)}},[topic]);function tT(i){var u=trigs.slice();u[i]={t:u[i].t,c:u[i].c,s:!u[i].s};sTr(u)}var selC=trigs.filter(function(t){return t.s}).length;function doGen(){
+var recipName=recips.length?recips[0]:“孩子”;
+var isPaid=(p.tier===“lite”||p.tier===“pro”);
+if(isPaid){
+sGL(true);sB(“✨ AI 正在為你寫一封有溫度的信…”);sW(“edit”);
+if(!title){var tp3=TOPICS.find(function(t){return t.id===topic});sTi(“給你的一封信 — 關於”+(tp3?tp3.label:“人生”))}
+genLetterAI(topic,trigs,recipName,function(text){sB(text);sGL(false)})
+}else{
+sB(genLetter(topic,trigs,recipName));sW(“edit”);
+if(!title){var tp2=TOPICS.find(function(t){return t.id===topic});sTi(“給你的一封信 — 關於”+(tp2?tp2.label:“人生”))}
+}
+}function togR(r){sR(recips.indexOf(r)>=0?recips.filter(function(x){return x!==r}):recips.concat([r]))}var canSave=mode===“text”?(topic&&title.trim()&&body.trim()&&recips.length>0):(topic&&title.trim()&&recips.length>0&&media.data);function doSave(){if(!canSave)return;var d=Object.assign({},p.data);d.msgs=[{id:Date.now().toString(36)+Math.random().toString(36).slice(2,6),topic:topic,title:title.trim(),body:mode===“text”?body.trim():””,recipients:recips,ageLock:age?parseInt(age):null,createdAt:new Date().toISOString(),type:mode,mediaData:media.data||null,mediaDuration:media.dur||null,photos:photos.length>0?photos:null}].concat(d.msgs);p.save(d);aud.cancel();vid.cancel();p.flash(“已收藏 ✓”);p.back()}function goBack(){aud.cancel();vid.cancel();p.back()}var topicObj=TOPICS.find(function(t){return t.id===topic});function tSec(label,icon,cat){var items=trigs.filter(function(t){return t.c===cat});if(!items.length)return null;return h(“div”,{style:{marginBottom:14}},h(“div”,{style:{fontSize:12,color:“var(–ac)”,fontWeight:600,marginBottom:8}},icon,” “,label),h(“div”,{className:“trg”},items.map(function(t){var idx=trigs.indexOf(t);return h(“div”,{key:idx,className:“tc”+(t.s?” s”:””),onClick:function(){tT(idx)}},t.t)})))}function recUI(){if(media.st===“idle”)return h(“div”,{className:“vp”,onClick:media.preview},h(“div”,{style:{fontSize:32,marginBottom:6}},mode===“video”?“🎥”:“🎙️”),h(“p”,{style:{fontWeight:500,fontSize:14,color:“var(–t2)”}},“準備好了就點這裡”),h(“p”,{style:{fontSize:12,color:“var(–t3)”,marginTop:4}},“深呼吸，慢慢來”));if(media.st===“requesting”)return h(“div”,{className:“vp”},h(“div”,{style:{fontSize:32}},“⏳”),h(“p”,null,“正在請求權限…”));if(media.st===“error”)return h(“div”,{className:“vp”,onClick:media.preview},h(“p”,{style:{color:”#B05050”}},media.err));if(media.st===“previewing”)return h(“div”,{className:“vr”},mode===“video”?h(“video”,{ref:liveRef,autoPlay:true,playsInline:true,muted:true,className:“vl”}):h(“div”,{className:“ar”},“🎙️”),h(“div”,{className:“vc”},h(“button”,{className:“rb”,onClick:media.start},h(“span”,{className:“rd”}),” 開始”),h(“button”,{className:“rx”,onClick:media.cancel},“取消”)));if(media.st===“recording”)return h(“div”,{className:“vr”},mode===“video”?h(“video”,{ref:liveRef,autoPlay:true,playsInline:true,muted:true,className:“vl rc”}):h(“div”,{className:“arec”},h(“div”,{className:“aw”}),h(“div”,{className:“rtl”},fmt(media.dur))),h(“div”,{className:“vc”},h(“div”,{className:“rtm”},h(“span”,{className:“rdp”}),” “,fmt(media.dur)),h(“button”,{className:“rs2”,onClick:media.stop},“■ 停止”)));if(media.st===“recorded”)return h(“div”,{className:“vr”},mode===“video”?h(“video”,{src:media.url,controls:true,playsInline:true,className:“vl”}):h(“audio”,{src:media.url,controls:true,style:{width:“100%”,margin:“16px 0”}}),h(“div”,{className:“vc”},h(“span”,{style:{color:“var(–t3)”,fontSize:13}},“已錄 “+fmt(media.dur)),h(“button”,{className:“rx”,onClick:media.reset},“重錄”)));return null}
+return h(“div”,{className:“S”},h(“div”,{className:“rh”},h(“button”,{className:“bb”,onClick:goBack},“←”),h(“div”,{className:“rt”},“留一段話”)),h(“div”,{className:“mt”},[{k:“text”,i:“✍️”,l:“文字”},{k:“audio”,i:“🎙️”,l:“語音”},{k:“video”,i:“🎥”,l:“影片”}].map(function(m){return h(“button”,{key:m.k,className:“mb”+(mode===m.k?” a”:””)+(ms.indexOf(m.k)<0?” l”:””),onClick:function(){if(ms.indexOf(m.k)>=0){aud.cancel();vid.cancel();sM(m.k)}},disabled:ms.indexOf(m.k)<0},m.i,” “,m.l,ms.indexOf(m.k)<0?” 🔒”:””)})),h(“div”,{className:“fg”},h(“div”,{className:“fl”},“人生主題”),h(“div”,{className:“ts”},TOPICS.map(function(t){return h(“div”,{key:t.id,className:“tp”+(topic===t.id?” s”:””),onClick:function(){sT(t.id)}},t.icon,” “,t.label)}))),mode===“text”&&topic&&wStep===“pick”&&h(“div”,{className:“fg”},h(“div”,{style:{textAlign:“center”,marginBottom:16}},h(“div”,{style:{fontSize:24,marginBottom:6}},“✨”),h(“div”,{style:{fontFamily:“var(–fs)”,fontSize:15,fontWeight:700,color:“var(–w)”,marginBottom:4}},“選出有共鳴的，AI 幫你寫成一封信”),h(“div”,{style:{fontSize:12,color:“var(–t3)”}},“選越多越豐富，之後可自由修改”)),tSec(“經歷過的事”,“📖”,“exp”),tSec(“心裡的感受”,“💭”,“emo”),tSec(“想告訴他們的”,“🧭”,“adv”),h(“button”,{className:“sb”,disabled:selC<3||genLoading,onClick:doGen},(p.tier===“free”?“📝 用 “+selC+” 個關鍵字生成信”:“✨ AI 為你寫一封信（”+selC+” 個關鍵字）”)+(selC<3?” (至少 3 個)”:””))),mode===“text”&&(!topic||wStep===“edit”)&&h(“div”,{className:“fg”},
+genLoading&&h(“div”,{style:{textAlign:“center”,padding:20}},h(“div”,{style:{fontSize:28,marginBottom:8,animation:“ap 2s ease-in-out infinite”}},“✨”),h(“div”,{style:{fontSize:14,color:“var(–ac)”,fontFamily:“var(–fs)”}},“AI 正在用心寫這封信…”),h(“div”,{style:{fontSize:12,color:“var(–t3)”,marginTop:4}},“大約需要 10 秒”)),
+!genLoading&&wStep===“edit”&&topic&&h(“div”,{style:{display:“flex”,justifyContent:“space-between”,marginBottom:8}},h(“div”,{className:“fl”,style:{margin:0}},“✍️ 你的信（可自由修改）”),h(“span”,{className:“alk”,style:{fontSize:12},onClick:function(){sW(“pick”)}},“← 重選”)),h(“textarea”,{className:“ft”,style:{minHeight:wStep===“edit”?220:140},placeholder:“閉上眼睛想像他們坐在你對面……”,value:body,onChange:function(e){sB(e.target.value)}})),mode!==“text”&&recUI(),
+// Photo upload (available in all modes)
+h(“div”,{className:“fg”},
+h(“div”,{className:“fl”},“📷 附加照片或影片（選填）”),
+h(“input”,{ref:photoRef,type:“file”,accept:“image/*,video/*”,multiple:true,style:{display:“none”},onChange:addPhoto}),
+photos.length>0&&h(“div”,{style:{display:“flex”,gap:8,flexWrap:“wrap”,marginBottom:10}},photos.map(function(ph2){return h(“div”,{key:ph2.id,style:{position:“relative”,width:72,height:72,borderRadius:10,overflow:“hidden”,border:“1px solid rgba(139,107,74,.1)”}},
+ph2.type===“image”?h(“img”,{src:ph2.data,style:{width:“100%”,height:“100%”,objectFit:“cover”}}):h(“div”,{style:{width:“100%”,height:“100%”,background:“var(–bg3)”,display:“flex”,alignItems:“center”,justifyContent:“center”,fontSize:24}},“🎬”),
+h(“button”,{style:{position:“absolute”,top:2,right:2,background:“rgba(0,0,0,.6)”,color:”#fff”,border:“none”,borderRadius:“50%”,width:20,height:20,fontSize:12,cursor:“pointer”,display:“flex”,alignItems:“center”,justifyContent:“center”},onClick:function(){removePhoto(ph2.id)}},“✕”)
+)})),
+h(“button”,{style:{width:“100%”,padding:12,background:“var(–bg2)”,border:“2px dashed rgba(139,107,74,.15)”,borderRadius:“var(–rs)”,color:“var(–t3)”,fontSize:13,cursor:“pointer”,boxShadow:“var(–sh)”},onClick:function(){photoRef.current.click()}},photos.length>0?”+ 再加一張”:“📷 從相簿選擇照片或影片”)
+),
+h(“div”,{className:“fg”},h(“div”,{className:“fl”},“標題”+(topicObj?” — “+topicObj.icon+” “+topicObj.label:””)),h(“input”,{className:“fi”,placeholder:“例：第一次被朋友背叛的那年”,value:title,onChange:function(e){sTi(e.target.value)}})),h(“div”,{className:“fg”},h(“div”,{className:“fl”},“留給誰？”),h(“div”,{className:“cr”},getFamilyRecips(p.data).map(function(r){return h(“div”,{key:r,className:“ch”+(recips.indexOf(r)>=0?” s”:””),onClick:function(){togR(r)}},r)}))),h(“div”,{className:“fg”},h(“div”,{className:“fl”},“年齡鎖（選填）”),h(“div”,{style:{display:“flex”,alignItems:“center”,gap:10}},h(“input”,{className:“fi”,style:{width:70,textAlign:“center”},type:“number”,min:0,max:99,placeholder:“18”,value:age,onChange:function(e){sA(e.target.value)}}),h(“span”,{style:{color:“var(–t3)”,fontSize:13}},“歲以上”))),h(“button”,{className:“sb”,disabled:!canSave,onClick:doSave},“💾 收藏”))}
+
+// ── Library ──
+function Lib(p){var f=us(“all”),fi=f[0],sF=f[1];var list=fi===“all”?p.data.msgs:p.data.msgs.filter(function(m){return m.topic===fi});var tm={};TOPICS.forEach(function(t){tm[t.id]=t});var ti={text:“✍️”,audio:“🎙️”,video:“🎥”};return h(“div”,{className:“S”},h(“div”,{className:“st”},“收藏庫”),h(“div”,{className:“lf”},h(“div”,{className:“fc”+(fi===“all”?” a”:””),onClick:function(){sF(“all”)}},“全部 (”+p.data.msgs.length+”)”),TOPICS.filter(function(t){return p.data.msgs.some(function(m){return m.topic===t.id})}).map(function(t){return h(“div”,{key:t.id,className:“fc”+(fi===t.id?” a”:””),onClick:function(){sF(t.id)}},t.icon,” (”,p.data.msgs.filter(function(m){return m.topic===t.id}).length,”)”)})),list.length===0?h(“div”,{className:“es”},h(“div”,{style:{fontSize:40,marginBottom:12,opacity:.5}},“📝”),h(“p”,{style:{fontSize:13,color:“var(–t3)”}},“還沒有留下任何話”)):list.map(function(msg){var t=tm[msg.topic]||{};return h(“div”,{key:msg.id,className:“mc”,onClick:function(){p.pick(msg)}},h(“div”,{className:“mct”},h(“span”,{className:“mtp”},(ti[msg.type]||””)+” “+(t.icon||””)+” “+(t.label||””)),h(“span”,{className:“md”},new Date(msg.createdAt).toLocaleDateString(“zh-TW”))),h(“div”,{className:“mtl”},msg.title),msg.type===“text”?h(“div”,{className:“mpv”},msg.body):h(“div”,{className:“mpv”,style:{color:msg.type===“video”?“var(–ac)”:“var(–blue)”}},ti[msg.type]+” “+(msg.type===“video”?“影片”:“語音”)+“留言”),h(“div”,{className:“mf”},msg.recipients.map(function(r){return h(“span”,{key:r,className:“mg”},r)})))}))}
+
+// ── Postcard generator ──
+function genPostcard(msg,topicObj){
+var canvas=document.createElement(“canvas”);
+canvas.width=1080;canvas.height=1350;
+var ctx=canvas.getContext(“2d”);
+// Background
+ctx.fillStyle=”#FBF7F2”;ctx.fillRect(0,0,1080,1350);
+// Top accent bar
+var grd=ctx.createLinearGradient(0,0,1080,0);grd.addColorStop(0,”#C07050”);grd.addColorStop(1,”#A05A3A”);
+ctx.fillStyle=grd;ctx.fillRect(0,0,1080,8);
+// Photo area
+var hasPhoto=msg.photos&&msg.photos.length>0&&msg.photos[0].type===“image”;
+if(hasPhoto){
+var img=new Image();img.crossOrigin=“anonymous”;img.src=msg.photos[0].data;
+img.onload=function(){
+ctx.save();ctx.beginPath();
+ctx.roundRect(60,60,960,540,20);ctx.clip();
+ctx.drawImage(img,60,60,960,540);ctx.restore();
+drawText(ctx,msg,topicObj,hasPhoto);
+downloadCanvas(canvas,msg);
+};return
+}
+drawText(ctx,msg,topicObj,false);
+downloadCanvas(canvas,msg)
+}
+function drawText(ctx,msg,topicObj,hasPhoto){
+var y=hasPhoto?640:100;
+// Title
+ctx.fillStyle=”#8B6B4A”;ctx.font=“bold 42px serif”;
+ctx.fillText(msg.title,80,y);y+=60;
+// Topic
+ctx.fillStyle=”#C07050”;ctx.font=“24px sans-serif”;
+ctx.fillText((topicObj&&topicObj.icon||””)+” “+(topicObj&&topicObj.label||””),80,y);y+=50;
+// Body text - wrap
+ctx.fillStyle=”#6B5D4F”;ctx.font=“28px serif”;
+var words=msg.body.split(””);var line=””;var maxW=920;
+for(var i=0;i<words.length&&y<1240;i++){
+if(words[i]===”\n”){ctx.fillText(line,80,y);y+=42;line=””;continue}
+var test=line+words[i];
+if(ctx.measureText(test).width>maxW){ctx.fillText(line,80,y);y+=42;line=words[i]}else{line=test}
+}
+if(line)ctx.fillText(line,80,y);y+=60;
+// Recipients
+ctx.fillStyle=”#A09484”;ctx.font=“22px sans-serif”;
+ctx.fillText(“留給 “+msg.recipients.join(”、”),80,Math.min(y,1270));
+// Date
+ctx.fillText(new Date(msg.createdAt).toLocaleDateString(“zh-TW”,{year:“numeric”,month:“long”,day:“numeric”}),80,Math.min(y+36,1306));
+// Footer
+ctx.fillStyle=”#C07050”;ctx.font=“20px sans-serif”;
+ctx.fillText(“🕯️ Somewhen”,860,1320)
+}
+function downloadCanvas(canvas,msg){
+setTimeout(function(){
+var url=canvas.toDataURL(“image/png”);
+var a=document.createElement(“a”);a.href=url;
+a.download=“somewhen-postcard-”+msg.id+”.png”;
+document.body.appendChild(a);a.click();document.body.removeChild(a)
+},500)
+}
+
+// ── Player ──
+function Play(p){var t=TOPICS.find(function(tp){return tp.id===p.msg.topic})||{};var cd=us(false),conf=cd[0],sC=cd[1];return h(“div”,{className:“S”},h(“div”,{className:“rh”},h(“button”,{className:“bb”,onClick:p.back},“←”),h(“div”,{className:“rt”},p.msg.type===“video”?“觀看影片”:p.msg.type===“audio”?“聆聽語音”:“閱讀留言”)),h(“div”,{className:“pc”},h(“div”,{className:“ptc”},(t.icon||””)+” “+(t.label||””)),h(“div”,{className:“ptl”},p.msg.title),h(“div”,{className:“pm”},new Date(p.msg.createdAt).toLocaleDateString(“zh-TW”,{year:“numeric”,month:“long”,day:“numeric”})),
+// Photos display
+p.msg.photos&&p.msg.photos.length>0&&h(“div”,{style:{display:“flex”,gap:8,flexWrap:“wrap”,marginBottom:16}},p.msg.photos.map(function(ph2){return h(“div”,{key:ph2.id,style:{borderRadius:12,overflow:“hidden”,border:“1px solid rgba(139,107,74,.08)”}},ph2.type===“image”?h(“img”,{src:ph2.data,style:{width:“100%”,maxHeight:300,objectFit:“cover”,display:“block”}}):h(“video”,{src:ph2.data,controls:true,playsInline:true,style:{width:“100%”,maxHeight:300,display:“block”}}))})),
+p.msg.mediaData&&p.msg.type===“video”&&h(“video”,{src:p.msg.mediaData,controls:true,playsInline:true,style:{width:“100%”,borderRadius:12,marginBottom:20}}),p.msg.mediaData&&p.msg.type===“audio”&&h(“audio”,{src:p.msg.mediaData,controls:true,style:{width:“100%”,marginBottom:20}}),p.msg.body&&h(“div”,{className:“pb”},p.msg.body),h(“div”,{className:“pr”},p.msg.recipients.map(function(r){return h(“span”,{key:r,className:“pt”},“留給 “+r)})),
+// Postcard export button
+p.msg.type===“text”&&h(“button”,{className:“shb”,style:{background:“linear-gradient(135deg,rgba(192,112,80,.08),rgba(139,107,74,.04))”},onClick:function(){genPostcard(p.msg,t);p.flash(“正在生成明信片…”)}},“🖼️ 匯出成明信片”)
+),!conf?h(“button”,{className:“db”,onClick:function(){sC(true)}},“刪除”):h(“div”,{style:{marginTop:16}},h(“p”,{style:{textAlign:“center”,color:”#B05050”,fontSize:14,marginBottom:12}},“確定刪除？”),h(“div”,{style:{display:“flex”,gap:12}},h(“button”,{className:“db”,style:{flex:1},onClick:function(){sC(false)}},“取消”),h(“button”,{className:“db”,style:{flex:1,background:“rgba(176,80,80,.08)”},onClick:function(){var d=Object.assign({},p.data);d.msgs=d.msgs.filter(function(m){return m.id!==p.msg.id});p.save(d);p.flash(“已刪除”);p.back()}},“確認刪除”))))}
+
+// ── Pricing ──
+function Pricing(p){var plans=[{k:“free”,n:“免費版”,pr:“免費”,f:[“無限文字留言”,“AI 引導式寫作”,“藏寶圖 + 聯絡人”,“時光膠囊（3 個）”]},{k:“lite”,n:“輕量版”,pr:”$4.99/月”,f:[“所有免費功能”,“無限語音錄製”,“無限時光膠囊”,“安全開關（基本）”],hl:true},{k:“pro”,n:“高級版”,pr:”$9.99/月”,f:[“所有輕量版功能”,“無限影片錄製”,“軍規級永久加密金庫”,“多重簽署安全開關”]}];return h(“div”,{className:“S”},h(“div”,{className:“rh”},h(“button”,{className:“bb”,onClick:p.back},“←”),h(“div”,{className:“rt”},“選擇方案”)),plans.map(function(pl){return h(“div”,{key:pl.k,className:“pcd”+(pl.hl?” hl”:””)+(p.tier===pl.k?” cu”:””)},h(“div”,{style:{display:“flex”,justifyContent:“space-between”,marginBottom:14}},h(“div”,{className:“pn”},pl.n),h(“div”,{className:“pp”},pl.pr)),h(“ul”,{className:“pf”},pl.f.map(function(f,i){return h(“li”,{key:i},“✓ “+f)})),h(“button”,{className:“pcta”+(p.tier===pl.k?” cu”:””),onClick:function(){p.set(pl.k)},disabled:p.tier===pl.k},p.tier===pl.k?“目前方案”:“升級”))}))}
+
+// ── Profile ──
+function Profile(p){var t=TIERS[p.tier];var fileRef=ur(null);
+function handleImport(e){var f=e.target.files[0];if(f)doImport(f,function(d){p.save(d);p.flash(“已還原備份 ✓”)})}
+return h(“div”,{className:“S”},h(“div”,{className:“rh”},h(“button”,{className:“bb”,onClick:p.back},“←”),h(“div”,{className:“rt”},“我的帳號”)),h(“div”,{className:“psec”},h(“div”,{className:“pav”},p.user.avatar||“👤”),h(“div”,{className:“pnm”},p.user.name),h(“div”,{className:“pem”},p.user.email)),
+// Backup section
+h(“div”,{className:“psec”},
+h(“div”,{style:{fontFamily:“var(–fs)”,fontWeight:700,fontSize:15,color:“var(–w)”,marginBottom:12}},“💾 資料備份”),
+h(“div”,{style:{fontSize:13,color:“var(–t2)”,lineHeight:1.6,marginBottom:14}},“你的資料目前存在手機裡。建議定期匯出備份，存到 iCloud 或 Google Drive。”),
+h(“button”,{className:“sb”,style:{marginTop:0,marginBottom:10},onClick:function(){doExport(p.data);p.flash(“已匯出備份 ✓”)}},“📥 匯出備份檔案”),
+h(“input”,{ref:fileRef,type:“file”,accept:”.json”,style:{display:“none”},onChange:handleImport}),
+h(“button”,{className:“sb”,style:{marginTop:0,background:“var(–bg3)”,color:“var(–t2)”,boxShadow:“none”,border:“1px solid rgba(139,107,74,.12)”},onClick:function(){fileRef.current.click()}},“📤 從備份檔案還原”),
+h(“div”,{style:{fontSize:11,color:“var(–t3)”,marginTop:8,lineHeight:1.5}},“⚠️ 還原會覆蓋目前所有資料。請先匯出當前資料作為保險。”)
+),
+h(“div”,{className:“psec”},[{i:“⭐”,l:“方案：”+t.l,fn:function(){p.go(“pricing”)}},{i:“👨‍👩‍👧‍👦”,l:“家庭成員（”+((p.data.family&&p.data.family.length)||0)+” 人）”,fn:function(){p.setOB(true)}},{i:“🔔”,l:“通知設定”},{i:“🗺️”,l:“金庫管理”,fn:function(){p.go(“vault”)}},{i:“🔐”,l:“隱私與安全”},{i:“💬”,l:“意見回饋”}].map(function(m,i){return h(“div”,{key:i,className:“pmi”,onClick:m.fn||null},h(“div”,{style:{display:“flex”,alignItems:“center”,gap:10,fontSize:14}},h(“span”,{style:{fontSize:18}},m.i),” “,m.l),h(“span”,{style:{color:“var(–t3)”}},”>”))})),h(“button”,{className:“lob”,onClick:p.logout},“登出”),h(“div”,{style:{textAlign:“center”,marginTop:16,fontSize:11,color:“var(–t3)”}},“Somewhen v1.0”))}
+
+// ── Main App ──
+function App(){
+var u=us(function(){try{return JSON.parse(localStorage.getItem(“tv-user”))}catch(e){return null}}),user=u[0],sU=u[1];
+var av=us(“welcome”),aV=av[0],sAV=av[1];
+var v=us(“home”),view=v[0],sV=v[1];
+var d=us(ld()),data=d[0],sD=d[1];
+var s=us(null),sel=s[0],sS=s[1];
+var t=us(null),toast=t[0],sT=t[1];
+var tr=us(“pro”),tier=tr[0],sTr=tr[1];
+var ob=us(false),onboarding=ob[0],sOB=ob[1];
+
+function flash(m){sT(m);setTimeout(function(){sT(null)},2400)}
+function doSave(nd){sD(nd);sv(nd)}
+function login(ud){localStorage.setItem(“tv-user”,JSON.stringify(ud));sU(ud);
+// Check if family onboarding needed
+var dd=ld();if(!dd.family||dd.family.length===0){sOB(true)}else{flash(“歡迎回來，”+(ud.displayName||ud.name))}
+}
+function logout(){localStorage.removeItem(“tv-user”);sU(null);sAV(“welcome”)}
+
+if(!user)return h(F,null,toast&&h(“div”,{className:“toast”},toast),aV===“welcome”&&h(Welcome,{go:login,onL:function(){sAV(“login”)},onR:function(){sAV(“register”)}}),aV===“login”&&h(Login,{go:login,bk:function(){sAV(“welcome”)},sw:function(){sAV(“register”)}}),aV===“register”&&h(Register,{go:login,bk:function(){sAV(“welcome”)},sw:function(){sAV(“login”)}}));
+
+// Family onboarding
+if(onboarding)return h(F,null,toast&&h(“div”,{className:“toast”},toast),h(FamilyOnboard,{user:user,setUser:sU,data:data,save:doSave,done:function(){sOB(false);flash(“設定完成！開始留下你的故事吧 🕯️”)}}));
+
+return h(F,null,toast&&h(“div”,{className:“toast”},toast),
+view===“home”&&h(Home,{data:data,tier:tier,go:function(tid){sV(“rec:”+tid)},goRec:function(person){sV(“rec:advice”)}}),
+view.indexOf(“rec”)===0&&h(Rec,{topic:view.split(”:”)[1]||””,tier:tier,data:data,save:doSave,flash:flash,back:function(){sV(“home”)}}),
+view===“library”&&h(Lib,{data:data,pick:function(m){sS(m);sV(“play”)},goRec:function(){sV(“rec:”)}}),
+view===“play”&&sel&&h(Play,{msg:sel,data:data,save:doSave,flash:flash,back:function(){sV(“library”)}}),
+view===“vault”&&h(Vault,{data:data,save:doSave,flash:flash,back:function(){sV(“home”)}}),
+view===“pricing”&&h(Pricing,{tier:tier,set:function(t){sTr(t);sV(“home”);flash(“已切換 “+TIERS[t].l)},back:function(){sV(“home”)}}),
+view===“profile”&&h(Profile,{user:user,data:data,tier:tier,go:function(v){sV(v)},logout:logout,back:function(){sV(“home”)},save:doSave,flash:flash,setOB:sOB}),
+h(“nav”,{className:“nb”},[
+{k:“home”,i:“🏠”,l:“首頁”,m:function(v){return v===“home”}},
+{k:“rec:”,i:“✍️”,l:“留話”,m:function(v){return v.indexOf(“rec”)===0}},
+{k:“vault”,i:“🗺️”,l:“金庫”,m:function(v){return v===“vault”}},
+{k:“library”,i:“📚”,l:“收藏”,m:function(v){return v===“library”||v===“play”}},
+{k:“profile”,i:“👤”,l:“我的”,m:function(v){return v===“profile”||v===“pricing”}}
+].map(function(n){return h(“button”,{key:n.k,className:n.m(view)?“a”:””,onClick:function(){sV(n.k)}},h(“span”,{className:“ni”},n.i),n.l)})));
+}
+ReactDOM.createRoot(document.getElementById(“R”)).render(h(App));
+</script>
+
+</body>
+</html>
