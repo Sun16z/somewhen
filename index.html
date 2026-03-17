@@ -862,96 +862,10 @@ var a=document.createElement("a");a.href=url;a.download="somewhen-postcard-"+msg
 }
 }
 
-// ── Background Music Engine (Web Audio API synthesizer) ──
-var MOOD_MUSIC={
-money:{tempo:72,scale:[261.6,293.7,329.6,349.2,392.0,440.0],type:"triangle",reverb:0.3,label:"沉穩節奏"},
-love:{tempo:60,scale:[261.6,293.7,329.6,392.0,440.0,523.3],type:"sine",reverb:0.5,label:"溫暖鋼琴"},
-career:{tempo:80,scale:[261.6,329.6,392.0,440.0,523.3,587.3],type:"triangle",reverb:0.3,label:"堅定前行"},
-betrayal:{tempo:54,scale:[220.0,261.6,277.2,329.6,370.0,440.0],type:"sine",reverb:0.6,label:"沉思低語"},
-loss:{tempo:48,scale:[220.0,261.6,293.7,329.6,370.0,392.0],type:"sine",reverb:0.7,label:"緩緩流淌"},
-family:{tempo:66,scale:[261.6,293.7,329.6,392.0,440.0,523.3],type:"sine",reverb:0.4,label:"溫馨圍爐"},
-growth:{tempo:76,scale:[261.6,329.6,392.0,440.0,523.3,659.3],type:"triangle",reverb:0.3,label:"漸漸明亮"},
-joy:{tempo:88,scale:[329.6,392.0,440.0,523.3,587.3,659.3],type:"sine",reverb:0.3,label:"輕快愉悅"},
-secret:{tempo:56,scale:[246.9,277.2,329.6,370.0,415.3,493.9],type:"sine",reverb:0.6,label:"神秘低吟"},
-advice:{tempo:64,scale:[261.6,293.7,349.2,392.0,440.0,523.3],type:"sine",reverb:0.4,label:"智慧之聲"}
-};
-function createBgMusic(topic){
-var mood=MOOD_MUSIC[topic]||MOOD_MUSIC.advice;
-var actx=null,playing=false,nodes=[],timer=null,gainNode=null;
-function start(){
-if(playing)return;
-try{
-actx=new(window.AudioContext||window.webkitAudioContext)();
-gainNode=actx.createGain();gainNode.gain.value=0;gainNode.connect(actx.destination);
-// Fade in
-gainNode.gain.linearRampToValueAtTime(0.15,actx.currentTime+2);
-playing=true;
-// Create reverb-like delay
-var delay=actx.createDelay();delay.delayTime.value=mood.reverb;
-var feedback=actx.createGain();feedback.gain.value=0.3;
-var delayGain=actx.createGain();delayGain.gain.value=0.2;
-delay.connect(feedback);feedback.connect(delay);delay.connect(delayGain);delayGain.connect(gainNode);
-function playNote(){
-if(!playing||!actx)return;
-var freq=mood.scale[Math.floor(Math.random()*mood.scale.length)];
-var octave=Math.random()>0.3?1:0.5;
-var osc=actx.createOscillator();
-osc.type=mood.type;osc.frequency.value=freq*octave;
-var env=actx.createGain();env.gain.value=0;
-env.gain.linearRampToValueAtTime(0.12,actx.currentTime+0.1);
-env.gain.exponentialRampToValueAtTime(0.001,actx.currentTime+2.5);
-osc.connect(env);env.connect(gainNode);env.connect(delay);
-osc.start(actx.currentTime);osc.stop(actx.currentTime+2.5);
-nodes.push(osc);
-// Occasionally play a chord (2 notes)
-if(Math.random()>0.5){
-var freq2=mood.scale[Math.floor(Math.random()*mood.scale.length)];
-var osc2=actx.createOscillator();osc2.type=mood.type;osc2.frequency.value=freq2*octave;
-var env2=actx.createGain();env2.gain.value=0;
-env2.gain.linearRampToValueAtTime(0.06,actx.currentTime+0.15);
-env2.gain.exponentialRampToValueAtTime(0.001,actx.currentTime+2.0);
-osc2.connect(env2);env2.connect(gainNode);
-osc2.start(actx.currentTime+0.05);osc2.stop(actx.currentTime+2.0);
-nodes.push(osc2);
-}
-}
-playNote();
-timer=setInterval(function(){if(playing)playNote()},60000/mood.tempo);
-}catch(e){}
-}
-function stop(){
-playing=false;
-if(timer){clearInterval(timer);timer=null}
-if(gainNode&&actx){try{gainNode.gain.linearRampToValueAtTime(0,actx.currentTime+1)}catch(e){}}
-setTimeout(function(){
-nodes.forEach(function(n){try{n.stop()}catch(e){}});nodes=[];
-if(actx){try{actx.close()}catch(e){}}actx=null;gainNode=null;
-},1200);
-}
-return{start:start,stop:stop,label:mood.label}
-}
-
 // ── Player ──
 function Play(p){var t=TOPICS.find(function(tp){return tp.id===p.msg.topic})||{};var cd=us(false),conf=cd[0],sC=cd[1];
-var mu=us(null),music=mu[0],sMu=mu[1];
-var mp=us(false),musicOn=mp[0],sMP=mp[1];
-var moodLabel=(MOOD_MUSIC[p.msg.topic]||{}).label||"";
-// Auto-start music for text messages
-ue(function(){
-if(p.msg.type==="text"&&p.msg.topic){
-var m=createBgMusic(p.msg.topic);sMu(m);
-// Don't auto-play, let user click to start
-}
-return function(){if(music)music.stop()}
-},[]);
-function toggleMusic(){
-if(!music)return;
-if(musicOn){music.stop();sMP(false)}
-else{music.start();sMP(true)}
-}
-return h("div",{className:"S"},h("div",{className:"rh"},h("button",{className:"bb",onClick:function(){if(music)music.stop();p.back()}},"←"),h("div",{className:"rt"},p.msg.type==="video"?"觀看影片":p.msg.type==="audio"?"聆聽語音":"閱讀留言"),
-// Music toggle button (text messages only)
-p.msg.type==="text"&&h("button",{style:{background:musicOn?"var(--acs)":"var(--bg2)",border:"1px solid "+(musicOn?"var(--ac)":"rgba(139,107,74,.12)"),borderRadius:10,padding:"6px 12px",fontSize:12,color:musicOn?"var(--ac)":"var(--t3)",cursor:"pointer",fontFamily:"var(--fn)"},onClick:toggleMusic},musicOn?"🔊 "+moodLabel:"🎵 播放音樂")
+return h("div",{className:"S"},h("div",{className:"rh"},h("button",{className:"bb",onClick:p.back},"←"),h("div",{className:"rt"},p.msg.type==="video"?"觀看影片":p.msg.type==="audio"?"聆聽語音":"閱讀留言"),
+p.msg.type==="text"&&h("button",{style:{background:"var(--bg3)",border:"1px solid rgba(139,107,74,.08)",borderRadius:10,padding:"6px 12px",fontSize:11,color:"var(--t3)",cursor:"default",fontFamily:"var(--fn)"},onClick:function(){p.flash("🎵 背景音樂即將推出")}},"🎵 音樂")
 ),h("div",{className:"pc"},h("div",{className:"ptc"},(t.icon||"")+" "+(t.label||"")),h("div",{className:"ptl"},p.msg.title),h("div",{className:"pm"},new Date(p.msg.createdAt).toLocaleDateString("zh-TW",{year:"numeric",month:"long",day:"numeric"})),
 // Photos display
 p.msg.photos&&p.msg.photos.length>0&&h("div",{style:{display:"flex",gap:8,flexWrap:"wrap",marginBottom:16}},p.msg.photos.map(function(ph2){return h("div",{key:ph2.id,style:{borderRadius:12,overflow:"hidden",border:"1px solid rgba(139,107,74,.08)"}},ph2.type==="image"?h("img",{src:ph2.data,style:{width:"100%",maxHeight:300,objectFit:"cover",display:"block"}}):h("video",{src:ph2.data,controls:true,playsInline:true,style:{width:"100%",maxHeight:300,display:"block"}}))})),
