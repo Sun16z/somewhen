@@ -16,9 +16,10 @@
 --ac:#C07050;--acs:rgba(192,112,80,.1);--w:#8B6B4A;
 --blue:#5B8FA8;--green:#5A9E6E;--r:18px;--rs:12px;
 --fs:'Noto Serif TC',serif;--fn:'Noto Sans TC',sans-serif;
---sh:0 2px 12px rgba(44,36,24,.06)
+--sh:0 2px 12px rgba(44,36,24,.06);
+--fscale:1
 }
-html,body{height:100%;background:var(--bg);color:var(--t1);font-family:var(--fn);-webkit-font-smoothing:antialiased;overflow-x:hidden}
+html,body{height:100%;background:var(--bg);color:var(--t1);font-family:var(--fn);font-size:calc(14px * var(--fscale));-webkit-font-smoothing:antialiased;overflow-x:hidden}
 #R{max-width:480px;margin:0 auto;min-height:100vh;position:relative}
 .S{position:relative;padding:24px 20px 110px;animation:fu .35s ease-out}
 @keyframes fu{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
@@ -861,8 +862,97 @@ var a=document.createElement("a");a.href=url;a.download="somewhen-postcard-"+msg
 }
 }
 
+// ── Background Music Engine (Web Audio API synthesizer) ──
+var MOOD_MUSIC={
+money:{tempo:72,scale:[261.6,293.7,329.6,349.2,392.0,440.0],type:"triangle",reverb:0.3,label:"沉穩節奏"},
+love:{tempo:60,scale:[261.6,293.7,329.6,392.0,440.0,523.3],type:"sine",reverb:0.5,label:"溫暖鋼琴"},
+career:{tempo:80,scale:[261.6,329.6,392.0,440.0,523.3,587.3],type:"triangle",reverb:0.3,label:"堅定前行"},
+betrayal:{tempo:54,scale:[220.0,261.6,277.2,329.6,370.0,440.0],type:"sine",reverb:0.6,label:"沉思低語"},
+loss:{tempo:48,scale:[220.0,261.6,293.7,329.6,370.0,392.0],type:"sine",reverb:0.7,label:"緩緩流淌"},
+family:{tempo:66,scale:[261.6,293.7,329.6,392.0,440.0,523.3],type:"sine",reverb:0.4,label:"溫馨圍爐"},
+growth:{tempo:76,scale:[261.6,329.6,392.0,440.0,523.3,659.3],type:"triangle",reverb:0.3,label:"漸漸明亮"},
+joy:{tempo:88,scale:[329.6,392.0,440.0,523.3,587.3,659.3],type:"sine",reverb:0.3,label:"輕快愉悅"},
+secret:{tempo:56,scale:[246.9,277.2,329.6,370.0,415.3,493.9],type:"sine",reverb:0.6,label:"神秘低吟"},
+advice:{tempo:64,scale:[261.6,293.7,349.2,392.0,440.0,523.3],type:"sine",reverb:0.4,label:"智慧之聲"}
+};
+function createBgMusic(topic){
+var mood=MOOD_MUSIC[topic]||MOOD_MUSIC.advice;
+var actx=null,playing=false,nodes=[],timer=null,gainNode=null;
+function start(){
+if(playing)return;
+try{
+actx=new(window.AudioContext||window.webkitAudioContext)();
+gainNode=actx.createGain();gainNode.gain.value=0;gainNode.connect(actx.destination);
+// Fade in
+gainNode.gain.linearRampToValueAtTime(0.15,actx.currentTime+2);
+playing=true;
+// Create reverb-like delay
+var delay=actx.createDelay();delay.delayTime.value=mood.reverb;
+var feedback=actx.createGain();feedback.gain.value=0.3;
+var delayGain=actx.createGain();delayGain.gain.value=0.2;
+delay.connect(feedback);feedback.connect(delay);delay.connect(delayGain);delayGain.connect(gainNode);
+function playNote(){
+if(!playing||!actx)return;
+var freq=mood.scale[Math.floor(Math.random()*mood.scale.length)];
+var octave=Math.random()>0.3?1:0.5;
+var osc=actx.createOscillator();
+osc.type=mood.type;osc.frequency.value=freq*octave;
+var env=actx.createGain();env.gain.value=0;
+env.gain.linearRampToValueAtTime(0.12,actx.currentTime+0.1);
+env.gain.exponentialRampToValueAtTime(0.001,actx.currentTime+2.5);
+osc.connect(env);env.connect(gainNode);env.connect(delay);
+osc.start(actx.currentTime);osc.stop(actx.currentTime+2.5);
+nodes.push(osc);
+// Occasionally play a chord (2 notes)
+if(Math.random()>0.5){
+var freq2=mood.scale[Math.floor(Math.random()*mood.scale.length)];
+var osc2=actx.createOscillator();osc2.type=mood.type;osc2.frequency.value=freq2*octave;
+var env2=actx.createGain();env2.gain.value=0;
+env2.gain.linearRampToValueAtTime(0.06,actx.currentTime+0.15);
+env2.gain.exponentialRampToValueAtTime(0.001,actx.currentTime+2.0);
+osc2.connect(env2);env2.connect(gainNode);
+osc2.start(actx.currentTime+0.05);osc2.stop(actx.currentTime+2.0);
+nodes.push(osc2);
+}
+}
+playNote();
+timer=setInterval(function(){if(playing)playNote()},60000/mood.tempo);
+}catch(e){}
+}
+function stop(){
+playing=false;
+if(timer){clearInterval(timer);timer=null}
+if(gainNode&&actx){try{gainNode.gain.linearRampToValueAtTime(0,actx.currentTime+1)}catch(e){}}
+setTimeout(function(){
+nodes.forEach(function(n){try{n.stop()}catch(e){}});nodes=[];
+if(actx){try{actx.close()}catch(e){}}actx=null;gainNode=null;
+},1200);
+}
+return{start:start,stop:stop,label:mood.label}
+}
+
 // ── Player ──
-function Play(p){var t=TOPICS.find(function(tp){return tp.id===p.msg.topic})||{};var cd=us(false),conf=cd[0],sC=cd[1];return h("div",{className:"S"},h("div",{className:"rh"},h("button",{className:"bb",onClick:p.back},"←"),h("div",{className:"rt"},p.msg.type==="video"?"觀看影片":p.msg.type==="audio"?"聆聽語音":"閱讀留言")),h("div",{className:"pc"},h("div",{className:"ptc"},(t.icon||"")+" "+(t.label||"")),h("div",{className:"ptl"},p.msg.title),h("div",{className:"pm"},new Date(p.msg.createdAt).toLocaleDateString("zh-TW",{year:"numeric",month:"long",day:"numeric"})),
+function Play(p){var t=TOPICS.find(function(tp){return tp.id===p.msg.topic})||{};var cd=us(false),conf=cd[0],sC=cd[1];
+var mu=us(null),music=mu[0],sMu=mu[1];
+var mp=us(false),musicOn=mp[0],sMP=mp[1];
+var moodLabel=(MOOD_MUSIC[p.msg.topic]||{}).label||"";
+// Auto-start music for text messages
+ue(function(){
+if(p.msg.type==="text"&&p.msg.topic){
+var m=createBgMusic(p.msg.topic);sMu(m);
+// Don't auto-play, let user click to start
+}
+return function(){if(music)music.stop()}
+},[]);
+function toggleMusic(){
+if(!music)return;
+if(musicOn){music.stop();sMP(false)}
+else{music.start();sMP(true)}
+}
+return h("div",{className:"S"},h("div",{className:"rh"},h("button",{className:"bb",onClick:function(){if(music)music.stop();p.back()}},"←"),h("div",{className:"rt"},p.msg.type==="video"?"觀看影片":p.msg.type==="audio"?"聆聽語音":"閱讀留言"),
+// Music toggle button (text messages only)
+p.msg.type==="text"&&h("button",{style:{background:musicOn?"var(--acs)":"var(--bg2)",border:"1px solid "+(musicOn?"var(--ac)":"rgba(139,107,74,.12)"),borderRadius:10,padding:"6px 12px",fontSize:12,color:musicOn?"var(--ac)":"var(--t3)",cursor:"pointer",fontFamily:"var(--fn)"},onClick:toggleMusic},musicOn?"🔊 "+moodLabel:"🎵 播放音樂")
+),h("div",{className:"pc"},h("div",{className:"ptc"},(t.icon||"")+" "+(t.label||"")),h("div",{className:"ptl"},p.msg.title),h("div",{className:"pm"},new Date(p.msg.createdAt).toLocaleDateString("zh-TW",{year:"numeric",month:"long",day:"numeric"})),
 // Photos display
 p.msg.photos&&p.msg.photos.length>0&&h("div",{style:{display:"flex",gap:8,flexWrap:"wrap",marginBottom:16}},p.msg.photos.map(function(ph2){return h("div",{key:ph2.id,style:{borderRadius:12,overflow:"hidden",border:"1px solid rgba(139,107,74,.08)"}},ph2.type==="image"?h("img",{src:ph2.data,style:{width:"100%",maxHeight:300,objectFit:"cover",display:"block"}}):h("video",{src:ph2.data,controls:true,playsInline:true,style:{width:"100%",maxHeight:300,display:"block"}}))})),
 p.msg.mediaData&&p.msg.type==="video"&&h("video",{src:p.msg.mediaData,controls:true,playsInline:true,style:{width:"100%",borderRadius:12,marginBottom:20}}),p.msg.mediaData&&p.msg.type==="audio"&&h("audio",{src:p.msg.mediaData,controls:true,style:{width:"100%",marginBottom:20}}),p.msg.body&&h("div",{className:"pb"},p.msg.body),h("div",{className:"pr"},p.msg.recipients.map(function(r){return h("span",{key:r,className:"pt"},"留給 "+r)})),
@@ -898,9 +988,44 @@ h("button",{className:"shb",style:{flex:"1 1 45%",marginTop:0},onClick:function(
 function Pricing(p){var plans=[{k:"free",n:"免費版",pr:"免費",f:["無限文字留言","AI 引導式寫作","藏寶圖 + 聯絡人","時光膠囊（3 個）"]},{k:"lite",n:"輕量版",pr:"$4.99/月",f:["所有免費功能","無限語音錄製","無限時光膠囊","安全開關（基本）"],hl:true},{k:"pro",n:"高級版",pr:"$9.99/月",f:["所有輕量版功能","無限影片錄製","軍規級永久加密金庫","多重簽署安全開關"]}];return h("div",{className:"S"},h("div",{className:"rh"},h("button",{className:"bb",onClick:p.back},"←"),h("div",{className:"rt"},"選擇方案")),plans.map(function(pl){return h("div",{key:pl.k,className:"pcd"+(pl.hl?" hl":"")+(p.tier===pl.k?" cu":"")},h("div",{style:{display:"flex",justifyContent:"space-between",marginBottom:14}},h("div",{className:"pn"},pl.n),h("div",{className:"pp"},pl.pr)),h("ul",{className:"pf"},pl.f.map(function(f,i){return h("li",{key:i},"✓ "+f)})),h("button",{className:"pcta"+(p.tier===pl.k?" cu":""),onClick:function(){p.set(pl.k)},disabled:p.tier===pl.k},p.tier===pl.k?"目前方案":pl.k==="free"?"使用免費版":"即將推出 · 先免費體驗"))}))}
 
 // ── Profile ──
+var FONT_SIZES=[{k:"normal",l:"標準",s:1},{k:"large",l:"大字",s:1.2},{k:"xlarge",l:"特大",s:1.4}];
+function getFontScale(){try{return parseFloat(localStorage.getItem("sw-fscale"))||1}catch(e){return 1}}
+function setFontScale(s){localStorage.setItem("sw-fscale",String(s));document.documentElement.style.setProperty("--fscale",s)}
+// init font scale on load
+(function(){var s=getFontScale();if(s!==1)document.documentElement.style.setProperty("--fscale",s)})();
+
+// ── Guided Tour ──
+function GuidedTour(p){
+var s=us(0),step=s[0],sS=s[1];
+var steps=[
+{title:"👋 歡迎使用 Somewhen！",text:"讓我帶你快速認識怎麼用，30 秒就好。"},
+{title:"📝 第一步：選一個主題",text:"往下滑，選一個你有感覺的人生主題。不用想太多，選了再說。"},
+{title:"✍️ 第二步：選模式",text:"文字、語音、影片——選你最自在的方式。第一次建議用文字，最簡單。"},
+{title:"💬 第三步：選關鍵字",text:"選幾個你有共鳴的詞，AI 會幫你寫成一封完整的信。選越多越豐富。"},
+{title:"👤 第四步：選收件人",text:"選擇你要把這封信留給誰。可以選多個人。"},
+{title:"✅ 完成！",text:"就這樣！你的第一封家書就存好了。隨時可以在收藏庫裡回看。"}
+];
+var cur=steps[step];
+return h("div",{style:{position:"fixed",top:0,left:0,right:0,bottom:0,background:"rgba(0,0,0,.6)",zIndex:9999,display:"flex",alignItems:"center",justifyContent:"center",padding:20}},
+h("div",{style:{background:"var(--bg)",borderRadius:20,padding:28,maxWidth:340,width:"100%",textAlign:"center",boxShadow:"0 8px 40px rgba(0,0,0,.2)"}},
+h("div",{style:{fontSize:13,color:"var(--t3)",marginBottom:6}},step+1+" / "+steps.length),
+h("div",{style:{fontFamily:"var(--fs)",fontWeight:700,fontSize:18,color:"var(--w)",marginBottom:12}},cur.title),
+h("div",{style:{fontSize:14,color:"var(--t2)",lineHeight:1.7,marginBottom:20}},cur.text),
+h("div",{style:{display:"flex",gap:10}},
+step>0&&h("button",{style:{flex:1,padding:"10px 0",background:"var(--bg3)",border:"none",borderRadius:10,fontSize:14,color:"var(--t2)",cursor:"pointer"},onClick:function(){sS(step-1)}},"上一步"),
+h("button",{style:{flex:1,padding:"10px 0",background:"var(--ac)",border:"none",borderRadius:10,fontSize:14,color:"#fff",cursor:"pointer",fontWeight:600},onClick:function(){if(step<steps.length-1)sS(step+1);else{localStorage.setItem("sw-toured","1");p.done()}}},step<steps.length-1?"下一步":"開始使用！")
+)))
+}
+
 function Profile(p){var t=TIERS[p.tier];var fileRef=ur(null);
+var fs2=us(getFontScale()),curScale=fs2[0],sCS=fs2[1];
 function handleImport(e){var f=e.target.files[0];if(f)doImport(f,function(d){p.save(d);p.flash("已還原備份 ✓")})}
 return h("div",{className:"S"},h("div",{className:"rh"},h("button",{className:"bb",onClick:p.back},"←"),h("div",{className:"rt"},"我的帳號")),h("div",{className:"psec"},h("div",{className:"pav"},p.user.avatar||"👤"),h("div",{className:"pnm"},p.user.name),h("div",{className:"pem"},p.user.email)),
+// Font size section
+h("div",{className:"psec"},
+h("div",{style:{fontFamily:"var(--fs)",fontWeight:700,fontSize:15,color:"var(--w)",marginBottom:12}},"🔤 字體大小"),
+h("div",{style:{display:"flex",gap:8}},FONT_SIZES.map(function(f){return h("button",{key:f.k,style:{flex:1,padding:"12px 8px",background:curScale===f.s?"var(--acs)":"var(--bg2)",border:"2px solid "+(curScale===f.s?"var(--ac)":"rgba(139,107,74,.1)"),borderRadius:10,fontSize:14*f.s,fontWeight:curScale===f.s?700:400,color:curScale===f.s?"var(--ac)":"var(--t2)",cursor:"pointer",fontFamily:"var(--fn)"},onClick:function(){setFontScale(f.s);sCS(f.s);p.flash("字體已切換為"+f.l)}},f.l)}))
+),
 // Backup section
 h("div",{className:"psec"},
 h("div",{style:{fontFamily:"var(--fs)",fontWeight:700,fontSize:15,color:"var(--w)",marginBottom:12}},"💾 資料備份"),
@@ -922,6 +1047,7 @@ var s=us(null),sel=s[0],sS=s[1];
 var t=us(null),toast=t[0],sT=t[1];
 var tr=us("pro"),tier=tr[0],sTr=tr[1];
 var ob=us(false),onboarding=ob[0],sOB=ob[1];
+var gt=us(function(){return !localStorage.getItem("sw-toured")}),showTour=gt[0],sGT=gt[1];
 
 function flash(m){sT(m);setTimeout(function(){sT(null)},2400)}
 function doSave(nd){sD(nd);sv(nd)}
@@ -937,6 +1063,7 @@ if(!user)return h(F,null,toast&&h("div",{className:"toast"},toast),aV==="welcome
 if(onboarding)return h(F,null,toast&&h("div",{className:"toast"},toast),h(FamilyOnboard,{user:user,setUser:sU,data:data,save:doSave,done:function(){sOB(false);flash("設定完成！開始留下你的故事吧 📬")}}));
 
 return h(F,null,toast&&h("div",{className:"toast"},toast),
+view==="home"&&showTour&&h(GuidedTour,{done:function(){sGT(false)}}),
 view==="home"&&h(Home,{data:data,tier:tier,go:function(tid){sV("rec:"+tid)},goRec:function(person){sV("rec:advice")}}),
 view.indexOf("rec")===0&&h(Rec,{topic:view.split(":")[1]||"",tier:tier,data:data,save:doSave,flash:flash,back:function(){sV("home")}}),
 view==="library"&&h(Lib,{data:data,pick:function(m){sS(m);sV("play")},goRec:function(){sV("rec:")}}),
