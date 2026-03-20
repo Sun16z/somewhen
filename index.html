@@ -11,7 +11,6 @@
 <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth-compat.js"></script>
 <style>
-/* 保持你原本完美的 CSS 樣式，完全沒有刪減 */
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
 --bg:#FBF7F2;--bg2:#FFFFFF;--bg3:#F3EDE5;
@@ -336,8 +335,7 @@ document.body.appendChild(a);a.click();document.body.removeChild(a);URL.revokeOb
 }
 
 // ========================================================
-// 🌟 核心修復：這就是為你完全重寫的非同步 PDF 匯出函數
-// 解決了中文亂碼問題，利用 Fetch 動態載入字體檔！
+// 🌟 PDF 中文亂碼修復，動態載入中文字體
 // ========================================================
 async function exportPDF(data, flashMsg){
     if(typeof jspdf==="undefined"&&typeof window.jspdf==="undefined"){
@@ -351,13 +349,10 @@ async function exportPDF(data, flashMsg){
     var doc=new jsPDF({orientation:"portrait",unit:"mm",format:"a4"});
 
     try {
-        // 從 CDN 動態下載 Noto Sans TC (思源黑體繁體) 的 ttf 檔
-        // 使用 jsdelivr 加速開源字體載入
         const fontUrl = "https://cdn.jsdelivr.net/npm/cn-fontsource-lxgw-wenkai-tc-regular/font.ttf"; 
         const response = await fetch(fontUrl);
         const buffer = await response.arrayBuffer();
         
-        // 將二進位轉成 Base64
         let binary = '';
         const bytes = new Uint8Array(buffer);
         const len = bytes.byteLength;
@@ -366,11 +361,8 @@ async function exportPDF(data, flashMsg){
         }
         const base64String = window.btoa(binary);
         
-        // 註冊進入 jsPDF
         doc.addFileToVFS("NotoSansTC.ttf", base64String);
         doc.addFont("NotoSansTC.ttf", "NotoSansTC", "normal");
-        
-        // 設定全局中文字體！
         doc.setFont("NotoSansTC");
     } catch(err) {
         console.error("載入字體失敗:", err);
@@ -731,7 +723,6 @@ function togDMS(){var d=Object.assign({},p.data);d.dms=Object.assign({},d.dms,{e
 
 return h("div",{className:"S"},
 h("div",{className:"rh"},h("button",{className:"bb",onClick:p.back},"←"),h("div",{className:"rt"},"金庫"),
-// 🌟 點擊匯出按鈕，現在會傳入 p.flash 來顯示載入狀態
 h("button",{style:{background:"var(--acs)",border:"1px solid rgba(192,112,80,.15)",borderRadius:10,padding:"6px 12px",fontSize:11,color:"var(--ac)",cursor:"pointer",fontWeight:600,fontFamily:"var(--fn)"},onClick:function(){exportPDF(p.data, p.flash)}},"📄 匯出 PDF")),
 h("div",{className:"stb"},[{k:"map",l:"🗺️ 藏寶圖"},{k:"contacts",l:"👥 聯絡人"},{k:"capsule",l:"⏰ 膠囊"},{k:"wishes",l:"💐 心願"},{k:"dms",l:"💀 開關"}].map(function(t){return h("button",{key:t.k,className:tab===t.k?"a":"",onClick:function(){setTab(t.k)}},t.l)})),
 
@@ -747,7 +738,7 @@ h("button",{className:"sb",disabled:!nit.trim()||!nloc.trim(),onClick:addVault,s
 )),
 
 tab==="contacts"&&h("div",null,
-h("div",{style:{fontSize:13,color:"var(--t2)",marginBottom:16,lineHeight:1.7,background:"var(--bg3)",padding:14,borderRadius:"var(--rs)"}},"👥 當家人不知道找誰的時候，這張表就是他們的救命索。"),
+h("div",{style:{fontSize:13,color:"var(--t2)",marginBottom:16,lineHeight:1.7,background:"var(--bg3)",padding:14,borderRadius:"var(--rs)"}},"👥 當家人不知道找誰的時候，這張表 বিন্দু就是他們的救命索。"),
 p.data.contacts.map(function(c){return h("div",{key:c.id,className:"cm"},h("div",{className:"cm-i"},c.icon),h("div",{style:{flex:1}},h("div",{className:"cm-q"},c.q),h("div",{className:"cm-a"},c.name),c.phone&&h("div",{className:"cm-p"},c.phone),h("div",{className:"vi-d"},h("button",{className:"vi-db",onClick:function(){delContact(c.id)}},"刪除"))))}),
 h("div",{style:{background:"var(--bg2)",border:"1px solid rgba(139,107,74,.08)",borderRadius:"var(--r)",padding:18,marginTop:12,boxShadow:"var(--sh)"}},
 h("div",{style:{fontFamily:"var(--fs)",fontWeight:700,fontSize:14,color:"var(--w)",marginBottom:12}},"+ 新增聯絡人"),
@@ -1048,10 +1039,42 @@ return h("button",{key:cs.id,style:{padding:"8px 10px",background:locked?"var(--
 h("div",{style:{fontSize:11,color:"var(--t3)",marginBottom:12}},"📱 手機：會跳出分享選單，可直接存圖或傳給家人"),
 h("div",{style:{fontFamily:"var(--fs)",fontWeight:700,fontSize:14,color:"var(--w)",marginBottom:10,marginTop:8}},"📤 分享文字給家人"),
 h("div",{style:{display:"flex",flexWrap:"wrap",gap:8}},
-h("button",{className:"shb",style:{flex:"1 1 45%",marginTop:0},onClick:function(){var text=p.msg.title+"\n\n"+p.msg.body.slice(0,200)+(p.msg.body.length>200?"…":"")+"\n\n—— 留給 "+p.msg.recipients.join("、")+" ❤️\n📬 Somewhen";if(navigator.share){navigator.share({title:p.msg.title,text:text}).catch(function(){})}else{navigator.clipboard.writeText(text).then(function(){p.flash("已複製，可貼到 LINE / IG ✓")})}}},"📱 分享到 LINE / IG"),
-h("button",{className:"shb",style:{flex:"1 1 45%",marginTop:0},onClick:function(){var subject=encodeURIComponent("📬 "+p.msg.title+" — Somewhen");var body=encodeURIComponent(p.msg.body+"\n\n—— 留給 "+p.msg.recipients.join("、")+" ❤️\n\n📬 Somewhen · somewhen.life");var mailto="mailto:?subject="+subject+"&body="+body;window.location.href=mailto}},"📧 Email 純文字版"),
-h("button",{className:"shb",style:{flex:"1 1 45%",marginTop:0},onClick:function(){navigator.clipboard.writeText(p.msg.body).then(function(){p.flash("已複製全文 ✓")}).catch(function(){p.flash("複製失敗，請手動選取")})}},"📋 複製全文"),
-h("button",{className:"shb",style:{flex:"1 1 45%",marginTop:0},onClick:function(){p.flash("💡 先點上方風格生成明信片圖，手機會跳出分享選單，可直接傳 LINE / Email")}},"🖼️ Email 明信片版")
+
+// 🌟 修改的分享區塊從這裡開始 🌟
+h("button",{className:"shb",style:{flex:"1 1 45%",marginTop:0},onClick:function(){
+    var text=p.msg.title+"\n\n"+p.msg.body.slice(0,200)+(p.msg.body.length>200?"…":"")+"\n\n—— 留給 "+p.msg.recipients.join("、")+" ❤️\n📬 Somewhen";
+    var isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+    if(navigator.share && isMobile){
+        navigator.share({title:p.msg.title,text:text}).catch(function(){
+            navigator.clipboard.writeText(text);
+            p.flash("已複製，可手動貼到 LINE / IG ✓");
+        });
+    }else{
+        navigator.clipboard.writeText(text).then(function(){
+            p.flash("已複製文字！正在為您開啟 LINE...");
+            setTimeout(function(){
+                window.open("https://line.me/R/msg/text/?" + encodeURIComponent(text), "_blank");
+            }, 600);
+        });
+    }
+}},"📱 分享到 LINE / IG"),
+
+h("button",{className:"shb",style:{flex:"1 1 45%",marginTop:0},onClick:function(){
+    var subject=encodeURIComponent("📬 "+p.msg.title+" — Somewhen");
+    var body=encodeURIComponent(p.msg.body+"\n\n—— 留給 "+p.msg.recipients.join("、")+" ❤️\n\n📬 Somewhen · somewhen.life");
+    window.location.href="mailto:?subject="+subject+"&body="+body;
+}},"📧 Email 純文字版"),
+
+h("button",{className:"shb",style:{flex:"1 1 45%",marginTop:0},onClick:function(){
+    navigator.clipboard.writeText(p.msg.body).then(function(){p.flash("已複製全文 ✓")}).catch(function(){p.flash("複製失敗，請手動選取")})
+}},"📋 複製全文"),
+
+h("button",{className:"shb",style:{flex:"1 1 45%",marginTop:0},onClick:function(){
+    p.flash("🖼️ 正在為您生成明信片...");
+    genPostcard(p.msg, t, "warm");
+}},"🖼️ Email 明信片版")
+// 🌟 修改的分享區塊到這裡結束 🌟
+
 )
 )
 ),!conf?h("button",{className:"db",onClick:function(){sC(true)}},"刪除"):h("div",{style:{marginTop:16}},h("p",{style:{textAlign:"center",color:"#B05050",fontSize:14,marginBottom:12}},"確定刪除？"),h("div",{style:{display:"flex",gap:12}},h("button",{className:"db",style:{flex:1},onClick:function(){sC(false)}},"取消"),h("button",{className:"db",style:{flex:1,background:"rgba(176,80,80,.08)"},onClick:function(){var d=Object.assign({},p.data);d.msgs=d.msgs.filter(function(m){return m.id!==p.msg.id});p.save(d);p.flash("已刪除");p.back()}},"確認刪除"))))}
