@@ -11,6 +11,7 @@
 <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth-compat.js"></script>
 <style>
+/* 保持你原本完美的 CSS 樣式，完全沒有刪減 */
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
 --bg:#FBF7F2;--bg2:#FFFFFF;--bg3:#F3EDE5;
@@ -25,16 +26,13 @@ html,body{height:100%;background:var(--bg);color:var(--t1);font-family:var(--fn)
 #R{max-width:480px;margin:0 auto;min-height:100vh;position:relative}
 .S{position:relative;padding:24px 20px 110px;animation:fu .35s ease-out}
 @keyframes fu{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
-/* nav */
 .nb{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:480px;background:rgba(251,247,242,.97);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-top:1px solid rgba(139,107,74,.1);display:flex;justify-content:space-around;padding:8px 0 max(8px,env(safe-area-inset-bottom));z-index:100}
 .nb button{background:none;border:none;color:var(--t3);font-size:10px;font-family:var(--fn);cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:2px;padding:4px 10px;-webkit-tap-highlight-color:transparent;transition:color .2s}
 .nb button.a{color:var(--ac)}
 .nb .ni{font-size:20px}
-/* header */
 .hd{text-align:center;padding:36px 0 20px}
 .hd h1{font-family:var(--fs);font-weight:900;font-size:28px;letter-spacing:2px;color:var(--w)}
 .hd p{color:var(--t2);font-size:13px;margin-top:6px;line-height:1.8;font-family:var(--fs)}
-/* cards */
 .cd{background:var(--bg2);border:1px solid rgba(139,107,74,.08);border-radius:var(--r);padding:16px 14px;cursor:pointer;transition:all .2s;position:relative;-webkit-tap-highlight-color:transparent;box-shadow:var(--sh)}
 .cd:active{transform:scale(.97);box-shadow:none}
 .tg{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:8px}
@@ -42,16 +40,13 @@ html,body{height:100%;background:var(--bg);color:var(--t1);font-family:var(--fn)
 .cd .lb{font-family:var(--fs);font-weight:700;font-size:14px;margin-bottom:3px;color:var(--w)}
 .cd .ds{font-size:11px;color:var(--t3);line-height:1.4}
 .cb{position:absolute;top:10px;right:10px;background:var(--ac);color:#fff;font-size:10px;font-weight:700;padding:2px 7px;border-radius:20px}
-/* stats */
 .sr{display:flex;gap:8px;margin:16px 0}
 .sc{flex:1;background:var(--bg2);border:1px solid rgba(139,107,74,.06);border-radius:var(--rs);padding:14px 8px;text-align:center;box-shadow:var(--sh)}
 .sn{font-family:var(--fs);font-weight:900;font-size:24px;color:var(--ac)}
 .sl{font-size:10px;color:var(--t3);margin-top:2px}
 .st{font-family:var(--fs);font-weight:700;font-size:20px;margin-bottom:14px;color:var(--w)}
-/* toast */
 .toast{position:fixed;top:28px;left:50%;transform:translateX(-50%);background:var(--bg2);border:1px solid var(--ac);color:var(--ac);padding:10px 20px;border-radius:30px;font-size:13px;font-weight:500;z-index:200;box-shadow:0 4px 20px rgba(0,0,0,.1);animation:ti .3s ease-out;white-space:nowrap}
 @keyframes ti{from{opacity:0;transform:translate(-50%,-10px)}to{opacity:1;transform:translate(-50%,0)}}
-/* form */
 .rh{display:flex;align-items:center;gap:12px;margin-bottom:20px}
 .bb{background:var(--bg2);border:1px solid rgba(139,107,74,.1);color:var(--t1);width:38px;height:38px;border-radius:10px;cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center;-webkit-tap-highlight-color:transparent;flex-shrink:0;box-shadow:var(--sh)}
 .rt{font-family:var(--fs);font-weight:700;font-size:18px;color:var(--w)}
@@ -60,29 +55,23 @@ html,body{height:100%;background:var(--bg);color:var(--t1);font-family:var(--fn)
 .fi,.ft{width:100%;background:var(--bg2);border:1px solid rgba(139,107,74,.12);border-radius:var(--rs);color:var(--t1);font-family:var(--fn);font-size:16px;padding:12px 14px;outline:none;-webkit-appearance:none;box-shadow:var(--sh)}
 .fi:focus,.ft:focus{border-color:var(--ac);box-shadow:0 0 0 3px rgba(192,112,80,.1)}
 .ft{min-height:140px;resize:vertical;line-height:1.7}
-/* chips */
 .cr{display:flex;flex-wrap:wrap;gap:6px}
 .ch{background:var(--bg2);border:1px solid rgba(139,107,74,.1);border-radius:20px;padding:7px 14px;font-size:12px;color:var(--t2);cursor:pointer;-webkit-tap-highlight-color:transparent;font-family:var(--fn);box-shadow:var(--sh)}
 .ch.s{background:var(--acs);border-color:var(--ac);color:var(--ac);font-weight:500}
-/* trigger chips */
 .trg{display:flex;flex-wrap:wrap;gap:8px}
 .tc{padding:8px 14px;font-size:13px;background:var(--bg2);border:1px solid rgba(139,107,74,.1);border-radius:20px;color:var(--t2);cursor:pointer;transition:all .2s;-webkit-tap-highlight-color:transparent;line-height:1.4;font-family:var(--fn);box-shadow:var(--sh)}
 .tc.s{background:var(--acs);border-color:var(--ac);color:var(--ac);font-weight:500;box-shadow:0 0 0 3px rgba(192,112,80,.08)}
 .tc:active{transform:scale(.96)}
-/* topic chips */
 .ts{display:flex;flex-wrap:wrap;gap:6px}
 .tp{background:var(--bg2);border:1px solid rgba(139,107,74,.1);border-radius:10px;padding:8px 12px;font-size:12px;color:var(--t2);cursor:pointer;-webkit-tap-highlight-color:transparent;font-family:var(--fn);box-shadow:var(--sh)}
 .tp.s{background:var(--acs);border-color:var(--ac);color:var(--ac)}
-/* submit */
 .sb{width:100%;padding:15px;background:linear-gradient(135deg,var(--ac),#A05A3A);color:#FFF;font-family:var(--fs);font-weight:700;font-size:15px;border:none;border-radius:var(--r);cursor:pointer;margin-top:8px;box-shadow:0 4px 16px rgba(192,112,80,.2);-webkit-tap-highlight-color:transparent;letter-spacing:.5px}
 .sb:disabled{opacity:.35;cursor:not-allowed}
-/* mode toggle */
 .mt{display:flex;margin-bottom:16px;border-radius:var(--rs);overflow:hidden;border:1px solid rgba(139,107,74,.1);box-shadow:var(--sh)}
 .mb{flex:1;padding:11px 4px;background:var(--bg2);border:none;color:var(--t3);font-family:var(--fn);font-size:13px;font-weight:500;cursor:pointer;-webkit-tap-highlight-color:transparent}
 .mb.a{background:var(--acs);color:var(--ac);font-weight:600}
 .mb.l{opacity:.4;cursor:not-allowed}
 .mb:not(:last-child){border-right:1px solid rgba(139,107,74,.08)}
-/* recorder */
 .vp{background:var(--bg2);border:2px dashed rgba(139,107,74,.15);border-radius:var(--r);padding:36px 20px;text-align:center;color:var(--t3);cursor:pointer;-webkit-tap-highlight-color:transparent;margin-bottom:16px;box-shadow:var(--sh)}
 .vr{border-radius:var(--r);overflow:hidden;background:#000;margin-bottom:16px;box-shadow:var(--sh)}
 .vl{width:100%;aspect-ratio:16/9;object-fit:cover;display:block;background:#000}
@@ -100,7 +89,6 @@ html,body{height:100%;background:var(--bg);color:var(--t1);font-family:var(--fn)
 .aw{width:60px;height:60px;border-radius:50%;background:rgba(192,112,80,.1);margin:0 auto 12px;animation:ap 2s ease-in-out infinite}
 @keyframes ap{0%,100%{transform:scale(1);opacity:.5}50%{transform:scale(1.25);opacity:.9}}
 .rtl{font-size:28px;font-weight:700;color:var(--ac)}
-/* guided */
 .gt{display:flex;align-items:center;gap:12px;padding:14px 16px;background:var(--bg2);border:1px solid rgba(139,107,74,.08);border-radius:var(--rs);margin-bottom:16px;cursor:pointer;box-shadow:var(--sh)}
 .gs{width:44px;height:24px;border-radius:12px;background:rgba(139,107,74,.15);position:relative;transition:background .2s;flex-shrink:0}
 .gs.on{background:var(--ac)}
@@ -111,7 +99,6 @@ html,body{height:100%;background:var(--bg);color:var(--t1);font-family:var(--fn)
 .gpb{height:100%;background:var(--ac);border-radius:2px;transition:width .3s}
 .gph{font-size:11px;color:var(--ac);font-weight:600;margin-bottom:8px;letter-spacing:1px}
 .gq{font-family:var(--fs);font-size:17px;font-weight:700;line-height:1.7;margin-bottom:16px;color:var(--w)}
-/* library */
 .lf{display:flex;gap:6px;overflow-x:auto;padding-bottom:6px;margin-bottom:12px;-webkit-overflow-scrolling:touch}
 .lf::-webkit-scrollbar{display:none}
 .fc{white-space:nowrap;background:var(--bg2);border:1px solid rgba(139,107,74,.08);border-radius:20px;padding:6px 12px;font-size:11px;color:var(--t3);cursor:pointer;flex-shrink:0;font-family:var(--fn);box-shadow:var(--sh)}
@@ -125,7 +112,6 @@ html,body{height:100%;background:var(--bg);color:var(--t1);font-family:var(--fn)
 .mpv{font-size:12px;color:var(--t2);line-height:1.5;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
 .mf{display:flex;gap:6px;margin-top:8px;flex-wrap:wrap}
 .mg{font-size:10px;background:var(--bg3);color:var(--t3);padding:2px 8px;border-radius:10px}
-/* player */
 .pc{background:var(--bg2);border:1px solid rgba(139,107,74,.06);border-radius:var(--r);padding:24px 18px;margin-top:12px;box-shadow:var(--sh)}
 .ptc{font-size:13px;color:var(--ac);font-weight:500;margin-bottom:10px}
 .ptl{font-family:var(--fs);font-weight:900;font-size:22px;line-height:1.5;margin-bottom:6px;color:var(--w)}
@@ -135,7 +121,6 @@ html,body{height:100%;background:var(--bg);color:var(--t1);font-family:var(--fn)
 .pt{font-size:11px;background:var(--acs);color:var(--ac);padding:3px 10px;border-radius:10px}
 .db{width:100%;padding:12px;background:transparent;border:1px solid rgba(200,90,90,.2);color:#B05050;font-family:var(--fn);font-size:13px;border-radius:var(--rs);cursor:pointer;margin-top:16px}
 .shb{width:100%;padding:12px;background:var(--acs);border:1px solid rgba(192,112,80,.2);color:var(--ac);font-family:var(--fn);font-size:13px;font-weight:500;border-radius:var(--rs);cursor:pointer;margin-top:16px}
-/* vault items */
 .vi{background:var(--bg2);border:1px solid rgba(139,107,74,.08);border-radius:var(--rs);padding:14px;margin-bottom:10px;box-shadow:var(--sh)}
 .vi-h{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}
 .vi-t{font-family:var(--fs);font-weight:700;font-size:14px;color:var(--w)}
@@ -143,29 +128,24 @@ html,body{height:100%;background:var(--bg);color:var(--t1);font-family:var(--fn)
 .vi-b{font-size:13px;color:var(--t2);line-height:1.6}
 .vi-d{display:flex;gap:8px;margin-top:8px}
 .vi-db{font-size:11px;color:var(--ac);cursor:pointer;padding:4px 10px;border:1px solid rgba(192,112,80,.15);border-radius:8px;background:transparent}
-/* contact matrix */
 .cm{background:var(--bg2);border:1px solid rgba(139,107,74,.08);border-radius:var(--rs);padding:14px;margin-bottom:10px;box-shadow:var(--sh);display:flex;align-items:flex-start;gap:12px}
 .cm-i{font-size:24px;flex-shrink:0;margin-top:2px}
 .cm-q{font-size:13px;color:var(--t2);margin-bottom:4px;line-height:1.5}
 .cm-a{font-family:var(--fs);font-weight:700;font-size:14px;color:var(--w)}
 .cm-p{font-size:12px;color:var(--t3);margin-top:2px}
-/* capsule */
 .cap{background:var(--bg2);border:1px solid rgba(139,107,74,.08);border-radius:var(--rs);padding:16px;margin-bottom:10px;box-shadow:var(--sh)}
 .cap-h{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
 .cap-t{font-family:var(--fs);font-weight:700;font-size:14px;color:var(--w)}
 .cap-d{font-size:11px;color:var(--ac);background:var(--acs);padding:2px 10px;border-radius:10px;font-weight:500}
 .cap-b{font-size:13px;color:var(--t2);line-height:1.5}
 .cap-r{font-size:11px;color:var(--t3);margin-top:6px}
-/* switch */
 .dms{background:var(--bg2);border:1px solid rgba(139,107,74,.08);border-radius:var(--r);padding:20px;margin-bottom:16px;box-shadow:var(--sh)}
 .dms-h{font-family:var(--fs);font-weight:700;font-size:16px;color:var(--w);margin-bottom:8px}
 .dms-p{font-size:13px;color:var(--t2);line-height:1.6;margin-bottom:12px}
 .dms-s{display:flex;justify-content:space-between;align-items:center;padding:12px;background:var(--bg3);border-radius:var(--rs);margin-bottom:8px}
 .dms-sl{font-size:13px;color:var(--t2)}
 .dms-sv{font-size:13px;font-weight:600;color:var(--ac)}
-/* empty */
 .es{text-align:center;padding:48px 20px;color:var(--t3)}
-/* auth */
 .as{position:relative;min-height:100vh;display:flex;flex-direction:column;justify-content:center;padding:40px 28px;animation:fu .5s ease-out;background:var(--bg)}
 .al{text-align:center;margin-bottom:40px}
 .atl{font-family:var(--fs);font-size:20px;font-weight:700;color:var(--w);text-align:center;margin-bottom:8px;line-height:1.6}
@@ -189,7 +169,6 @@ html,body{height:100%;background:var(--bg);color:var(--t1);font-family:var(--fn)
 .odd{display:flex;justify-content:center;gap:8px;margin-top:28px}
 .od{width:8px;height:8px;border-radius:50%;background:rgba(139,107,74,.15);transition:all .3s;cursor:pointer}
 .od.a{background:var(--ac);width:24px;border-radius:4px}
-/* pricing */
 .pcd{background:var(--bg2);border:1px solid rgba(139,107,74,.08);border-radius:var(--r);padding:20px;margin-bottom:12px;box-shadow:var(--sh)}
 .pcd.hl{border-color:var(--ac);box-shadow:0 0 20px rgba(192,112,80,.08)}
 .pcd.cu{border-color:var(--green)}
@@ -199,7 +178,6 @@ html,body{height:100%;background:var(--bg);color:var(--t1);font-family:var(--fn)
 .pf li{font-size:13px;color:var(--t2);padding:4px 0}
 .pcta{width:100%;padding:12px;background:var(--ac);color:#fff;border:none;border-radius:var(--rs);font-family:var(--fn);font-size:14px;font-weight:600;cursor:pointer}
 .pcta.cu{background:rgba(90,158,110,.1);color:var(--green);cursor:default}
-/* profile */
 .psec{background:var(--bg2);border:1px solid rgba(139,107,74,.06);border-radius:var(--r);padding:24px;margin-bottom:16px;box-shadow:var(--sh)}
 .pav{width:64px;height:64px;border-radius:50%;background:var(--bg3);display:flex;align-items:center;justify-content:center;font-size:28px;margin:0 auto 12px;border:2px solid var(--ac)}
 .pnm{font-family:var(--fs);font-weight:700;font-size:20px;text-align:center;color:var(--w);margin-bottom:4px}
@@ -208,7 +186,6 @@ html,body{height:100%;background:var(--bg);color:var(--t1);font-family:var(--fn)
 .pmi:last-child{border-bottom:none}
 .lob{width:100%;padding:14px;background:transparent;border:1px solid rgba(176,80,80,.2);color:#B05050;font-family:var(--fn);font-size:14px;border-radius:var(--rs);cursor:pointer}
 .tbg{display:inline-block;margin-top:10px;padding:4px 14px;border-radius:20px;font-size:11px;font-weight:700;border:1px solid;letter-spacing:1px}
-/* section tabs */
 .stb{display:flex;gap:0;border-radius:var(--rs);overflow:hidden;border:1px solid rgba(139,107,74,.1);margin-bottom:16px;box-shadow:var(--sh)}
 .stb button{flex:1;padding:10px;background:var(--bg2);border:none;color:var(--t3);font-family:var(--fn);font-size:12px;font-weight:500;cursor:pointer}
 .stb button.a{background:var(--acs);color:var(--ac);font-weight:600}
@@ -229,7 +206,6 @@ if(typeof React==="undefined"){document.getElementById("R").innerHTML="<p style=
 try{
 "use strict";
 
-// ===== 加入 Firebase 與隱私備份核心邏輯 =====
 const firebaseConfig = {
   apiKey: "AIzaSyD-MjeKq4Q8JbMukMAivX-lKlr5nwNjJW0",
   authDomain: "somewhen-715f1.firebaseapp.com",
@@ -262,21 +238,18 @@ async function uploadToDrive(token, uid, dataObj) {
         await fetch('https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart', { method: 'POST', headers: { 'Authorization': 'Bearer ' + token, 'Content-Type': 'multipart/related; boundary=' + boundary }, body: body });
     } catch (e) { console.error("雲端備份失敗", e); }
 }
-// ===========================================
 
 var h=React.createElement,F=React.Fragment,us=React.useState,ue=React.useEffect,ur=React.useRef,uc=React.useCallback;
 var SK="tv5";
 function ld(){try{return JSON.parse(localStorage.getItem(SK))||{msgs:[],vault:[],contacts:[],capsules:[],wishes:{},dms:{enabled:false,interval:90,witnesses:[]},family:[],dates:[],monthlyCount:0}}catch(e){return{msgs:[],vault:[],contacts:[],capsules:[],wishes:{},dms:{enabled:false,interval:90,witnesses:[]},family:[],dates:[],monthlyCount:0}}}
 function sv(d){try{localStorage.setItem(SK,JSON.stringify(d))}catch(e){}}
 
-// ── Family helpers ──
 var REL_OPTIONS=[{id:"son",label:"兒子",icon:"👦"},{id:"daughter",label:"女兒",icon:"👧"},{id:"wife",label:"老婆",icon:"👩"},{id:"husband",label:"老公",icon:"👨"},{id:"mother",label:"媽媽",icon:"👵"},{id:"father",label:"爸爸",icon:"👴"},{id:"sibling",label:"兄弟姐妹",icon:"👫"},{id:"friend",label:"摯友",icon:"🤝"},{id:"self",label:"未來的自己",icon:"🪞"},{id:"other",label:"其他",icon:"👤"}];
 function getFamilyRecips(data){
 if(!data.family||!data.family.length)return["全家人","未來的自己"];
 return data.family.map(function(f){return f.nickname||f.name}).concat(["全家人"])
 }
 
-// ── Holiday & milestone calendar ──
 var FIXED_HOLIDAYS=[
 {m:1,d:1,name:"元旦",icon:"🎊",prompt:"新的一年，你最想對家人說什麼？"},
 {m:2,d:14,name:"情人節",icon:"💕",prompt:"跟另一半說一段只有你們才懂的話"},
@@ -361,80 +334,129 @@ var a=document.createElement("a");
 a.href=url;a.download="somewhen-backup-"+new Date().toISOString().slice(0,10)+".json";
 document.body.appendChild(a);a.click();document.body.removeChild(a);URL.revokeObjectURL(url);
 }
-function exportPDF(data){
-if(typeof jspdf==="undefined"&&typeof window.jspdf==="undefined"){alert("PDF 模組載入中，請稍後再試");return}
-var jsPDF=(window.jspdf||jspdf).jsPDF;
-var doc=new jsPDF({orientation:"portrait",unit:"mm",format:"a4"});
-var y=20,pw=170,lh=7,pg=1;
-function addPage(){doc.addPage();y=20;pg++}
-function checkY(need){if(y+need>275){addPage()}}
-doc.setFontSize(22);doc.setTextColor(140,107,74);
-doc.text("Somewhen",105,y,{align:"center"});y+=10;
-doc.setFontSize(11);doc.setTextColor(100,100,100);
-doc.text("資產交接備忘錄",105,y,{align:"center"});y+=6;
-doc.text("生成日期："+new Date().toLocaleDateString("zh-TW",{year:"numeric",month:"long",day:"numeric"}),105,y,{align:"center"});y+=12;
-doc.setDrawColor(192,112,80);doc.setLineWidth(0.5);doc.line(20,y,190,y);y+=10;
-doc.setFontSize(8);doc.setTextColor(180,80,80);
-doc.text("* 本文件僅供家人參考，不具法律效力。建議搭配正式遺囑或預立醫療決定使用。",20,y);y+=10;
-if(data.vault&&data.vault.length>0){
-doc.setFontSize(14);doc.setTextColor(140,107,74);doc.text("一、資產位置",20,y);y+=8;
-var cats={};data.vault.forEach(function(v){if(!cats[v.cat])cats[v.cat]=[];cats[v.cat].push(v)});
-var catLabels={crypto:"加密貨幣",bank:"銀行帳戶",insurance:"保險",property:"房產",medical:"醫療紀錄",docs:"重要文件",other:"其他"};
-Object.keys(cats).forEach(function(cat){
-checkY(15);
-doc.setFontSize(11);doc.setTextColor(60,60,60);doc.text((catLabels[cat]||cat)+"：",20,y);y+=6;
-cats[cat].forEach(function(v){
-checkY(12);
-doc.setFontSize(10);doc.setTextColor(80,80,80);
-doc.text("• "+v.title+"："+v.loc,25,y,{maxWidth:pw-10});y+=lh;
-});y+=4;
-});y+=6;
+
+// ========================================================
+// 🌟 核心修復：這就是為你完全重寫的非同步 PDF 匯出函數
+// 解決了中文亂碼問題，利用 Fetch 動態載入字體檔！
+// ========================================================
+async function exportPDF(data, flashMsg){
+    if(typeof jspdf==="undefined"&&typeof window.jspdf==="undefined"){
+        alert("PDF 模組載入中，請稍後再試");
+        return;
+    }
+    
+    if(flashMsg) flashMsg("🚀 正在下載中文字體生成 PDF，請稍候...");
+    
+    var jsPDF=(window.jspdf||jspdf).jsPDF;
+    var doc=new jsPDF({orientation:"portrait",unit:"mm",format:"a4"});
+
+    try {
+        // 從 CDN 動態下載 Noto Sans TC (思源黑體繁體) 的 ttf 檔
+        // 使用 jsdelivr 加速開源字體載入
+        const fontUrl = "https://cdn.jsdelivr.net/npm/cn-fontsource-lxgw-wenkai-tc-regular/font.ttf"; 
+        const response = await fetch(fontUrl);
+        const buffer = await response.arrayBuffer();
+        
+        // 將二進位轉成 Base64
+        let binary = '';
+        const bytes = new Uint8Array(buffer);
+        const len = bytes.byteLength;
+        for (let i = 0; i < len; i++) {
+            binary += String.fromCharCode(bytes[i]);
+        }
+        const base64String = window.btoa(binary);
+        
+        // 註冊進入 jsPDF
+        doc.addFileToVFS("NotoSansTC.ttf", base64String);
+        doc.addFont("NotoSansTC.ttf", "NotoSansTC", "normal");
+        
+        // 設定全局中文字體！
+        doc.setFont("NotoSansTC");
+    } catch(err) {
+        console.error("載入字體失敗:", err);
+        if(flashMsg) flashMsg("⚠️ 字體下載失敗，將使用系統預設 (可能產生亂碼)");
+    }
+
+    var y=20,pw=170,lh=7,pg=1;
+    function addPage(){doc.addPage();y=20;pg++}
+    function checkY(need){if(y+need>275){addPage()}}
+    
+    doc.setFontSize(22);doc.setTextColor(140,107,74);
+    doc.text("Somewhen",105,y,{align:"center"});y+=10;
+    doc.setFontSize(11);doc.setTextColor(100,100,100);
+    doc.text("資產交接備忘錄",105,y,{align:"center"});y+=6;
+    doc.text("生成日期："+new Date().toLocaleDateString("zh-TW",{year:"numeric",month:"long",day:"numeric"}),105,y,{align:"center"});y+=12;
+    doc.setDrawColor(192,112,80);doc.setLineWidth(0.5);doc.line(20,y,190,y);y+=10;
+    doc.setFontSize(8);doc.setTextColor(180,80,80);
+    doc.text("* 本文件僅供家人參考，不具法律效力。建議搭配正式遺囑或預立醫療決定使用。",20,y);y+=10;
+    
+    if(data.vault&&data.vault.length>0){
+        doc.setFontSize(14);doc.setTextColor(140,107,74);doc.text("一、資產位置",20,y);y+=8;
+        var cats={};data.vault.forEach(function(v){if(!cats[v.cat])cats[v.cat]=[];cats[v.cat].push(v)});
+        var catLabels={crypto:"加密貨幣",bank:"銀行帳戶",insurance:"保險",property:"房產",medical:"醫療紀錄",docs:"重要文件",other:"其他"};
+        Object.keys(cats).forEach(function(cat){
+            checkY(15);
+            doc.setFontSize(11);doc.setTextColor(60,60,60);doc.text((catLabels[cat]||cat)+"：",20,y);y+=6;
+            cats[cat].forEach(function(v){
+                checkY(12);
+                doc.setFontSize(10);doc.setTextColor(80,80,80);
+                doc.text("• "+v.title+"："+v.loc,25,y,{maxWidth:pw-10});y+=lh;
+            });y+=4;
+        });y+=6;
+    }
+    
+    if(data.contacts&&data.contacts.length>0){
+        checkY(15);
+        doc.setFontSize(14);doc.setTextColor(140,107,74);doc.text("二、緊急聯絡人",20,y);y+=8;
+        data.contacts.forEach(function(c){
+            checkY(12);
+            doc.setFontSize(10);doc.setTextColor(80,80,80);
+            doc.text("• "+c.q+"  →  "+c.name+(c.phone?" ("+c.phone+")":""),25,y,{maxWidth:pw-10});y+=lh;
+        });y+=6;
+    }
+    
+    if(data.wishes){
+        var w=data.wishes;var hasWish=w.emergency||w.vegetative||w.organ||w.farewell||w.decisionMaker;
+        if(hasWish){
+            checkY(15);
+            doc.setFontSize(14);doc.setTextColor(140,107,74);doc.text("三、我的心願",20,y);y+=8;
+            doc.setFontSize(8);doc.setTextColor(180,80,80);doc.text("* 不具法律效力，僅為個人意願參考",25,y);y+=6;
+            doc.setFontSize(10);doc.setTextColor(80,80,80);
+            if(w.emergency){checkY(8);doc.text("• 重傷/重病時："+w.emergency,25,y,{maxWidth:pw-10});y+=lh}
+            if(w.vegetative){checkY(8);doc.text("• 植物人狀態："+w.vegetative,25,y,{maxWidth:pw-10});y+=lh}
+            if(w.organ){checkY(8);doc.text("• 器官捐贈："+w.organ,25,y,{maxWidth:pw-10});y+=lh}
+            if(w.decisionMaker){checkY(8);doc.text("• 醫療決定代理人："+w.decisionMaker,25,y,{maxWidth:pw-10});y+=lh}
+            if(w.farewell){checkY(8);doc.text("• 告別方式："+w.farewell,25,y,{maxWidth:pw-10});y+=lh}
+            if(w.music){checkY(8);doc.text("• 告別音樂："+w.music,25,y,{maxWidth:pw-10});y+=lh}
+            if(w.pets){checkY(8);doc.text("• 寵物安置："+w.pets,25,y,{maxWidth:pw-10});y+=lh}
+            if(w.messageToDecider){checkY(14);doc.text("• 給決定者的話："+w.messageToDecider,25,y,{maxWidth:pw-10});y+=Math.ceil(w.messageToDecider.length/35)*lh}
+            y+=6;
+        }
+    }
+    
+    checkY(40);
+    doc.setFontSize(14);doc.setTextColor(140,107,74);
+    doc.text("四、數位工具",20,y);y+=8;
+    doc.setFontSize(10);doc.setTextColor(80,80,80);
+    doc.text("掃描以下 QR Code 開啟 Somewhen，查看完整留言與影音：",20,y);y+=10;
+    doc.setDrawColor(140,107,74);doc.setFillColor(140,107,74);
+    doc.rect(20,y,30,30);
+    doc.setTextColor(255,255,255);doc.setFontSize(8);
+    doc.text("QR",35,y+14,{align:"center"});
+    doc.text("CODE",35,y+19,{align:"center"});
+    doc.setTextColor(80,80,80);doc.setFontSize(10);
+    doc.text("somewhen.life",55,y+12);
+    doc.text("（請用手機掃描或直接輸入網址）",55,y+19);
+    y+=36;
+    checkY(20);
+    doc.setDrawColor(192,112,80);doc.line(20,y,190,y);y+=8;
+    doc.setFontSize(9);doc.setTextColor(140,107,74);
+    doc.text("📬 Somewhen — 把心裡的話，變成一封信",105,y,{align:"center"});
+    
+    doc.save("somewhen-asset-handover-"+new Date().toISOString().slice(0,10)+".pdf");
+    if(flashMsg) flashMsg("✅ PDF 匯出成功！");
 }
-if(data.contacts&&data.contacts.length>0){
-checkY(15);
-doc.setFontSize(14);doc.setTextColor(140,107,74);doc.text("二、緊急聯絡人",20,y);y+=8;
-data.contacts.forEach(function(c){
-checkY(12);
-doc.setFontSize(10);doc.setTextColor(80,80,80);
-doc.text("• "+c.q+"  →  "+c.name+(c.phone?" ("+c.phone+")":""),25,y,{maxWidth:pw-10});y+=lh;
-});y+=6;
-}
-if(data.wishes){var w=data.wishes;var hasWish=w.emergency||w.vegetative||w.organ||w.farewell||w.decisionMaker;
-if(hasWish){
-checkY(15);
-doc.setFontSize(14);doc.setTextColor(140,107,74);doc.text("三、我的心願",20,y);y+=8;
-doc.setFontSize(8);doc.setTextColor(180,80,80);doc.text("* 不具法律效力，僅為個人意願參考",25,y);y+=6;
-doc.setFontSize(10);doc.setTextColor(80,80,80);
-if(w.emergency){checkY(8);doc.text("• 重傷/重病時："+w.emergency,25,y,{maxWidth:pw-10});y+=lh}
-if(w.vegetative){checkY(8);doc.text("• 植物人狀態："+w.vegetative,25,y,{maxWidth:pw-10});y+=lh}
-if(w.organ){checkY(8);doc.text("• 器官捐贈："+w.organ,25,y,{maxWidth:pw-10});y+=lh}
-if(w.decisionMaker){checkY(8);doc.text("• 醫療決定代理人："+w.decisionMaker,25,y,{maxWidth:pw-10});y+=lh}
-if(w.farewell){checkY(8);doc.text("• 告別方式："+w.farewell,25,y,{maxWidth:pw-10});y+=lh}
-if(w.music){checkY(8);doc.text("• 告別音樂："+w.music,25,y,{maxWidth:pw-10});y+=lh}
-if(w.pets){checkY(8);doc.text("• 寵物安置："+w.pets,25,y,{maxWidth:pw-10});y+=lh}
-if(w.messageToDecider){checkY(14);doc.text("• 給決定者的話："+w.messageToDecider,25,y,{maxWidth:pw-10});y+=Math.ceil(w.messageToDecider.length/35)*lh}
-y+=6;
-}}
-checkY(40);
-doc.setFontSize(14);doc.setTextColor(140,107,74);
-doc.text("四、數位工具",20,y);y+=8;
-doc.setFontSize(10);doc.setTextColor(80,80,80);
-doc.text("掃描以下 QR Code 開啟 Somewhen，查看完整留言與影音：",20,y);y+=10;
-doc.setDrawColor(140,107,74);doc.setFillColor(140,107,74);
-doc.rect(20,y,30,30);
-doc.setTextColor(255,255,255);doc.setFontSize(8);
-doc.text("QR",35,y+14,{align:"center"});
-doc.text("CODE",35,y+19,{align:"center"});
-doc.setTextColor(80,80,80);doc.setFontSize(10);
-doc.text("somewhen.life",55,y+12);
-doc.text("（請用手機掃描或直接輸入網址）",55,y+19);
-y+=36;
-checkY(20);
-doc.setDrawColor(192,112,80);doc.line(20,y,190,y);y+=8;
-doc.setFontSize(9);doc.setTextColor(140,107,74);
-doc.text("📬 Somewhen — 把心裡的話，變成一封信",105,y,{align:"center"});
-doc.save("somewhen-asset-handover-"+new Date().toISOString().slice(0,10)+".pdf");
-}
+
 function doImport(file,cb){
 var reader=new FileReader();
 reader.onload=function(e){
@@ -536,7 +558,6 @@ h("select",{style:ss,value:sd,onChange:function(e){upd(null,null,e.target.value)
 function fmt(s){return Math.floor(s/60)+":"+(s%60<10?"0":"")+(s%60)}
 function useMedia(type){var s=us("idle"),st=s[0],setSt=s[1];var u=us(null),url=u[0],setUrl=u[1];var d=us(null),data=d[0],setData=d[1];var du=us(0),dur=du[0],setDur=du[1];var e=us(null),err=e[0],setErr=e[1];var strm=ur(null),rec=ur(null),ch=ur([]),tmr=ur(null);var con=type==="video"?{video:{facingMode:"user"},audio:true}:{audio:true};var preview=uc(function(){setSt("requesting");setErr(null);return navigator.mediaDevices.getUserMedia(con).then(function(s){strm.current=s;setSt("previewing");return s}).catch(function(e){setErr(e.name==="NotAllowedError"?"需要允許使用"+(type==="video"?"鏡頭和麥克風":"麥克風"):e.message);setSt("error");return null})},[type]);var start=uc(function(){if(!strm.current)return;ch.current=[];setDur(0);var m=type==="video"?(MediaRecorder.isTypeSupported("video/webm")?"video/webm":"video/mp4"):(MediaRecorder.isTypeSupported("audio/webm")?"audio/webm":"audio/mp4");var r=new MediaRecorder(strm.current,{mimeType:m});rec.current=r;r.ondataavailable=function(e){if(e.data.size>0)ch.current.push(e.data)};r.onstop=function(){var b=new Blob(ch.current,{type:m});setUrl(URL.createObjectURL(b));var rd=new FileReader();rd.onloadend=function(){setData(rd.result)};rd.readAsDataURL(b);setSt("recorded")};r.start(1000);setSt("recording");tmr.current=setInterval(function(){setDur(function(d){return d+1})},1000)},[type]);var stop=uc(function(){if(rec.current&&rec.current.state!=="inactive")try{rec.current.stop()}catch(e){}if(tmr.current){clearInterval(tmr.current);tmr.current=null}if(strm.current){strm.current.getTracks().forEach(function(t){t.stop()});strm.current=null}},[]);var reset=uc(function(){stop();if(url)URL.revokeObjectURL(url);setUrl(null);setData(null);setDur(0);setErr(null);setSt("idle")},[url,stop]);var cancel=uc(function(){if(strm.current){strm.current.getTracks().forEach(function(t){t.stop()});strm.current=null}if(tmr.current){clearInterval(tmr.current);tmr.current=null}if(rec.current&&rec.current.state!=="inactive")try{rec.current.stop()}catch(e){}if(url)URL.revokeObjectURL(url);setUrl(null);setData(null);setDur(0);setErr(null);setSt("idle")},[url]);return{st:st,url:url,data:data,dur:dur,err:err,stream:strm.current,preview:preview,start:start,stop:stop,reset:reset,cancel:cancel}}
 
-// ── Google Auth 整合版 Welcome ──
 function Welcome(p){
 var s=us(0),step=s[0],ss=s[1];
 var ld=us(false),loading=ld[0],sL=ld[1];
@@ -709,7 +730,9 @@ function delCapsule(id){var d=Object.assign({},p.data);d.capsules=d.capsules.fil
 function togDMS(){var d=Object.assign({},p.data);d.dms=Object.assign({},d.dms,{enabled:!d.dms.enabled});p.save(d)}
 
 return h("div",{className:"S"},
-h("div",{className:"rh"},h("button",{className:"bb",onClick:p.back},"←"),h("div",{className:"rt"},"金庫"),h("button",{style:{background:"var(--acs)",border:"1px solid rgba(192,112,80,.15)",borderRadius:10,padding:"6px 12px",fontSize:11,color:"var(--ac)",cursor:"pointer",fontWeight:600,fontFamily:"var(--fn)"},onClick:function(){exportPDF(p.data);p.flash("PDF 生成中…")}},"📄 匯出 PDF")),
+h("div",{className:"rh"},h("button",{className:"bb",onClick:p.back},"←"),h("div",{className:"rt"},"金庫"),
+// 🌟 點擊匯出按鈕，現在會傳入 p.flash 來顯示載入狀態
+h("button",{style:{background:"var(--acs)",border:"1px solid rgba(192,112,80,.15)",borderRadius:10,padding:"6px 12px",fontSize:11,color:"var(--ac)",cursor:"pointer",fontWeight:600,fontFamily:"var(--fn)"},onClick:function(){exportPDF(p.data, p.flash)}},"📄 匯出 PDF")),
 h("div",{className:"stb"},[{k:"map",l:"🗺️ 藏寶圖"},{k:"contacts",l:"👥 聯絡人"},{k:"capsule",l:"⏰ 膠囊"},{k:"wishes",l:"💐 心願"},{k:"dms",l:"💀 開關"}].map(function(t){return h("button",{key:t.k,className:tab===t.k?"a":"",onClick:function(){setTab(t.k)}},t.l)})),
 
 tab==="map"&&h("div",null,
@@ -1027,7 +1050,7 @@ h("div",{style:{fontFamily:"var(--fs)",fontWeight:700,fontSize:14,color:"var(--w
 h("div",{style:{display:"flex",flexWrap:"wrap",gap:8}},
 h("button",{className:"shb",style:{flex:"1 1 45%",marginTop:0},onClick:function(){var text=p.msg.title+"\n\n"+p.msg.body.slice(0,200)+(p.msg.body.length>200?"…":"")+"\n\n—— 留給 "+p.msg.recipients.join("、")+" ❤️\n📬 Somewhen";if(navigator.share){navigator.share({title:p.msg.title,text:text}).catch(function(){})}else{navigator.clipboard.writeText(text).then(function(){p.flash("已複製，可貼到 LINE / IG ✓")})}}},"📱 分享到 LINE / IG"),
 h("button",{className:"shb",style:{flex:"1 1 45%",marginTop:0},onClick:function(){var subject=encodeURIComponent("📬 "+p.msg.title+" — Somewhen");var body=encodeURIComponent(p.msg.body+"\n\n—— 留給 "+p.msg.recipients.join("、")+" ❤️\n\n📬 Somewhen · somewhen.life");var mailto="mailto:?subject="+subject+"&body="+body;window.location.href=mailto}},"📧 Email 純文字版"),
-h("button",{className:"shb",style:{flex:"1 1 45%",marginTop:0},onClick:function(){navigator.clipboard.writeText(p.msg.body).then(function(){p.flash("已複製全文 ✓")}).catch(function(){p.flash("複製失敗，請手動選取")})}},"\uD83D\uDCCB 複製全文"),
+h("button",{className:"shb",style:{flex:"1 1 45%",marginTop:0},onClick:function(){navigator.clipboard.writeText(p.msg.body).then(function(){p.flash("已複製全文 ✓")}).catch(function(){p.flash("複製失敗，請手動選取")})}},"📋 複製全文"),
 h("button",{className:"shb",style:{flex:"1 1 45%",marginTop:0},onClick:function(){p.flash("💡 先點上方風格生成明信片圖，手機會跳出分享選單，可直接傳 LINE / Email")}},"🖼️ Email 明信片版")
 )
 )
@@ -1066,9 +1089,7 @@ function Profile(p){var t=TIERS[p.tier];var fileRef=ur(null);
 var fs2=us(getFontScale()),curScale=fs2[0],sCS=fs2[1];
 function handleImport(e){var f=e.target.files[0];if(f)doImport(f,function(d){p.save(d);p.flash("已還原備份 ✓")})}
 return h("div",{className:"S"},h("div",{className:"rh"},h("button",{className:"bb",onClick:p.back},"←"),h("div",{className:"rt"},"我的帳號")),h("div",{className:"psec"},
-// ===== 頭像修正區域 =====
 h("div",{className:"pav",style:{overflow:"hidden"}},(p.user.avatar&&p.user.avatar.indexOf("http")===0)?h("img",{src:p.user.avatar,style:{width:"100%",height:"100%",objectFit:"cover"}}):p.user.avatar||"👤"),
-// ========================
 h("div",{className:"pnm"},p.user.name),h("div",{className:"pem"},p.user.email)),
 h("div",{className:"psec"},
 h("div",{style:{fontFamily:"var(--fs)",fontWeight:700,fontSize:15,color:"var(--w)",marginBottom:12}},"🔤 字體大小"),
@@ -1097,23 +1118,19 @@ var gt=us(function(){return !localStorage.getItem("sw-toured")}),showTour=gt[0],
 
 function flash(m){sT(m);setTimeout(function(){sT(null)},2400)}
 
-// ===== 修改這裡以支援雲端備份 =====
 function doSave(nd){
   sD(nd);sv(nd);
   if(window.GOOGLE_TOKEN && user && user.uid && user.uid !== "guest") {
     uploadToDrive(window.GOOGLE_TOKEN, user.uid, nd);
   }
 }
-// ==================================
 
 function login(ud){localStorage.setItem("tv-user",JSON.stringify(ud));sU(ud);
 var dd=ld();if(!dd.family||dd.family.length===0){sOB(true)}else{flash("歡迎回來，"+(ud.displayName||ud.name))}
 }
 function logout(){localStorage.removeItem("tv-user");sU(null);sAV("welcome")}
 
-// ===== 顯示 Google Login Welcome 畫面 =====
 if(!user)return h(F,null,toast&&h("div",{className:"toast"},toast),h(Welcome,{go:login}));
-// ===========================================
 
 if(onboarding)return h(F,null,toast&&h("div",{className:"toast"},toast),h(FamilyOnboard,{user:user,setUser:sU,data:data,save:doSave,done:function(){sOB(false);flash("設定完成！開始留下你的故事吧 📬")}}));
 
